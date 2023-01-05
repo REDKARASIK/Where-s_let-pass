@@ -26,12 +26,42 @@ class Button(pygame.sprite.Sprite):
         self.rect = pygame.Rect(self.pos_x, self.pos_y, self.text_width + self.step * 2,
                                 self.text_height + self.step * 2)
 
+    def update(self, *args):
+        if args and args[0].type == pygame.MOUSEMOTION:
+            if self.rect.collidepoint(args[0].pos):
+                pygame.draw.rect(self.image, 'blue',
+                                 (0, 0, self.text_width + self.step * 2, self.text_width + self.step * 2))
+                pygame.draw.rect(self.image, 'white', (0, 0, self.text_width + self.step * 2,
+                                                       self.text_height + self.step * 2), 2)
+                self.image.blit(self.text_m, (self.step, self.step))
+            else:
+                pygame.draw.rect(self.image, 'black',
+                                 (0, 0, self.text_width + self.step * 2, self.text_width + self.step * 2))
+                pygame.draw.rect(self.image, 'white', (0, 0, self.text_width + self.step * 2,
+                                                       self.text_height + self.step * 2), 2)
+                self.image.blit(self.text_m, (self.step, self.step))
+        if args and args[0].type == pygame.MOUSEBUTTONDOWN:
+            if self.rect.collidepoint(args[0].pos):
+                pygame.draw.rect(self.image, 'darkblue',
+                                 (0, 0, self.text_width + self.step * 2, self.text_width + self.step * 2))
+                pygame.draw.rect(self.image, 'white', (0, 0, self.text_width + self.step * 2,
+                                                       self.text_height + self.step * 2), 2)
+                self.image.blit(self.text_m, (self.step, self.step))
+        if args and args[0].type == pygame.MOUSEBUTTONUP:
+            if self.rect.collidepoint(args[0].pos):
+                pygame.draw.rect(self.image, 'blue',
+                                 (0, 0, self.text_width + self.step * 2, self.text_width + self.step * 2))
+                pygame.draw.rect(self.image, 'white', (0, 0, self.text_width + self.step * 2,
+                                                       self.text_height + self.step * 2), 2)
+                self.image.blit(self.text_m, (self.step, self.step))
+
 
 if __name__ == '__main__':
     running = True
     button = Button('Привет', 100, 100, all_sprites)
     while True:
         for event in pygame.event.get():
+            all_sprites.update(event)
             if event.type == pygame.QUIT:
                 terminate()
         screen.fill('black')
