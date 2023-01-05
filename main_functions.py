@@ -37,8 +37,8 @@ def terminate():
     sys.exit()
 
 
-def get_monitor_size():
-    monitor = str(*get_monitors())
-    width = monitor.split('width')[1].split(',')[0][1:]
-    height = monitor.split('height')[1].split(',')[0][1:]
-    return width, height
+# def get_monitor_size():
+#     monitor = str(*get_monitors())
+#     width = monitor.split('width')[1].split(',')[0][1:]
+#     height = monitor.split('height')[1].split(',')[0][1:]
+#     return width, height
