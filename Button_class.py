@@ -9,8 +9,9 @@ all_sprites = pygame.sprite.Group()
 
 
 class Button(pygame.sprite.Sprite):
-    def __init__(self, text, pos_x, pos_y, *group):
+    def __init__(self, text, type, pos_x, pos_y, *group):
         super().__init__(*group)
+        self.type = type
         self.text = text
         self.pos_x = pos_x
         self.pos_y = pos_y
@@ -58,7 +59,7 @@ class Button(pygame.sprite.Sprite):
 
 if __name__ == '__main__':
     running = True
-    button = Button('Привет', 100, 100, all_sprites)
+    button = Button('Привет', 'кнопка', 100, 100, all_sprites)
     while True:
         for event in pygame.event.get():
             all_sprites.update(event)
