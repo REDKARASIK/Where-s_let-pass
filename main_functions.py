@@ -2,7 +2,8 @@ import os
 import sys
 
 import pygame
-#from screeninfo import get_monitors
+
+# from screeninfo import get_monitors
 
 pygame.init()
 size = width, height = 600, 400
@@ -36,7 +37,6 @@ def load_level(filename):
 def terminate():
     pygame.quit()
     sys.exit()
-
 
 # def get_monitor_size():
 #     monitor = str(*get_monitors())
