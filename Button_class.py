@@ -20,16 +20,17 @@ class Button(pygame.sprite.Sprite):
         self.text_width = self.text_m.get_width()
         self.text_height = self.text_m.get_height()
         self.image = pygame.Surface([self.text_width + self.step * 2, self.text_height + self.step * 2])
+        pygame.draw.rect(self.image, 'white', (0, 0, self.text_width + self.step * 2,
+                                               self.text_height + self.step * 2), 2)
+        self.image.blit(self.text_m, (self.step, self.step))
         self.rect = pygame.Rect(self.pos_x, self.pos_y, self.text_width + self.step * 2,
                                 self.text_height + self.step * 2)
-        pygame.draw.rect(self.image, 'white', (self.pos_x, self.pos_y, self.text_width + self.step * 2,
-                         self.text_height + self.step * 2), 2)
 
 
 if __name__ == '__main__':
     running = True
     button = Button('Привет', 100, 100, all_sprites)
-    while running:
+    while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
