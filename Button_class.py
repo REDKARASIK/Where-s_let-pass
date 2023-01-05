@@ -1,5 +1,5 @@
 import pygame
-import sys
+
 from main_functions import terminate
 
 pygame.init()
@@ -9,8 +9,9 @@ all_sprites = pygame.sprite.Group()
 
 
 class Button(pygame.sprite.Sprite):
-    def __init__(self, text, pos_x, pos_y, *group):
+    def __init__(self, text, type, pos_x, pos_y, *group):
         super().__init__(*group)
+        self.type = type
         self.text = text
         self.pos_x = pos_x
         self.pos_y = pos_y
@@ -47,6 +48,7 @@ class Button(pygame.sprite.Sprite):
                 pygame.draw.rect(self.image, 'white', (0, 0, self.text_width + self.step * 2,
                                                        self.text_height + self.step * 2), 2)
                 self.image.blit(self.text_m, (self.step, self.step))
+                return type
         if args and args[0].type == pygame.MOUSEBUTTONUP:
             if self.rect.collidepoint(args[0].pos):
                 pygame.draw.rect(self.image, 'blue',
