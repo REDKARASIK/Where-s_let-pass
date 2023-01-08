@@ -8,7 +8,7 @@ screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 
 class Map:
     def __init__(self, filename, free_tiles, finish_tile):
-        self.map = pytmx.load_pygame(f'data/{filename}')
+        self.map = pytmx.load_pygame(f'maps/firstmap.tmx')
         self.height = self.map.height
         self.width = self.map.width
         self.tile_size = self.map.tilewidth
