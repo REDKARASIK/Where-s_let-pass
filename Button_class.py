@@ -61,8 +61,7 @@ class Button(pygame.sprite.Sprite):
 
 
 if __name__ == '__main__':
-    running = True
-    button = Button('Привет', 'кнопка', 100, 100, all_sprites)
+    button = Button('Привет', 100, 100, all_sprites)
     while True:
         for event in pygame.event.get():
             all_sprites.update(event)
