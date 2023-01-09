@@ -4,6 +4,8 @@ import pytmx
 pygame.init()
 
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+print(screen.get_size())
+
 
 
 class Map:
@@ -19,7 +21,13 @@ class Map:
         for y in range(self.height):
             for x in range(self.width):
                 image = self.map.get_tile_image(x, y, 0)
+                image2 = self.map.get_tile_image(x, y, 1)
                 screen.blit(image, (x * self.tile_size, y * self.tile_size))
+                if image2:
+                    screen.blit(image2, (x * self.tile_size, y * self.tile_size))
+
+
+
 
     def get_tile_id(self, position):
         return self.map.tiledgidmap[self.map.get_tile_gid(*position, 0)]
