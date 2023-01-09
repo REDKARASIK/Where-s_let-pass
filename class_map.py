@@ -21,6 +21,12 @@ class Map:
                 image = self.map.get_tile_image(x, y, 0)
                 screen.blit(image, (x * self.tile_size, y * self.tile_size))
 
+    def get_tile_id(self, position):
+        return self.map.tiledgidmap[self.map.get_tile_gid(*position, 0)]
+
+    def is_free(self, position):
+        return self.get_tile_id(position) in self.free_tiles
+
 
 if __name__ == "__main__":
     map = Map('1stmap.tmx', 0, 0)
