@@ -41,10 +41,10 @@ def start_screen(screen, current_level):
             if exit_game.click(event):
                 terminate()
             if new_game.click(event):
-                return 0
+                return 1
             if continue_game:
                 if continue_game.click(event):
-                    return current_level
+                    return current_level + 1
         all_buttons.draw(screen)
         pygame.display.flip()
         clock.tick(fps)
