@@ -30,6 +30,7 @@ class Map:
         return self.map.tiledgidmap[self.map.get_tile_gid(*position, 0)]
 
     def is_free(self, position):
+        print(self.get_tile_id(position))
         return self.get_tile_id(position) in self.free_tiles
 
 
