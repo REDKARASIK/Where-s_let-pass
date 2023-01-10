@@ -1,6 +1,5 @@
-import time
-
 import pygame
+
 from main_functions import load_image, terminate
 
 pygame.init()
@@ -33,7 +32,7 @@ class Player(pygame.sprite.Sprite):
             for i in range(columns):
                 frame_location = (self.rect.w * i, self.rect.h * j)
                 frames.append(sheet.subsurface(pygame.Rect(
-                    frame_location, (21, 48))))
+                    frame_location, (22, 48))))
 
     def update(self, *args):
         if args[0][pygame.K_f]:
