@@ -33,7 +33,7 @@ class Player(pygame.sprite.Sprite):
             for i in range(columns):
                 frame_location = (self.rect.w * i, self.rect.h * j)
                 frames.append(sheet.subsurface(pygame.Rect(
-                    frame_location, self.rect.size)))
+                    frame_location, (21, 48))))
 
     def update(self, *args):
         if args[0][pygame.K_f]:
@@ -47,6 +47,7 @@ class Player(pygame.sprite.Sprite):
                 self.image = pygame.transform.flip(self.image, True, False)
             if not self.cur_frame:
                 self.attack = False
+                self.cur_frame = 0
         if self.walk_check:
             self.cur_frame = (self.cur_frame + 1) % len(self.walk_frames)
             self.image = self.walk_frames[self.cur_frame]
@@ -64,12 +65,16 @@ class Player(pygame.sprite.Sprite):
             if args[0][pygame.K_w]:
                 self.rect.y -= self.speed
             if not (args[0][pygame.K_w] or args[0][pygame.K_s] or args[0][pygame.K_a] or args[0][pygame.K_d]):
+                if self.walk_check:
+                    self.cur_frame = 0
                 self.cur_frame = (self.cur_frame + 1) % len(self.idle_frames)
                 self.image = self.idle_frames[self.cur_frame]
                 if self.transform:
                     self.image = pygame.transform.flip(self.image, True, False)
                 self.walk_check = False
             else:
+                if not self.walk_check:
+                    self.cur_frame = 0
                 self.walk_check = True
 
 
