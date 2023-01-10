@@ -30,17 +30,16 @@ class Map:
         return self.map.tiledgidmap[self.map.get_tile_gid(*position, 0)]
 
     def is_free(self, position):
-        print(self.get_tile_id(position))
         return self.get_tile_id(position) in self.free_tiles
 
 
 if __name__ == "__main__":
-    map = Map('project_of_map.tmx', 0, 0)
+    maps = Map('project_of_map.tmx', 0, 0)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     terminate()
         screen.fill('black')
-        map.render(screen)
+        maps.render(screen)
         pygame.display.flip()

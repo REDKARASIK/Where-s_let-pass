@@ -12,7 +12,7 @@ def main_game(screen, name_level):
     clock = pygame.time.Clock()
     map_level = Map(name_level,
                     [6, 7, 8, 9, 16, 17, 18, 19, 26, 27, 28, 29, 60, 61, 62, 63, 70, 71, 72, 73, 11, 12, 13, 14, 21, 22,
-                     23, 24, 31, 32, 33, 34, 79], 50)
+                     23, 24, 31, 32, 33, 34, 79, 43], 50)
     player = Player(64, 64, map_level, player_group)
     while True:
         for event in pygame.event.get():
