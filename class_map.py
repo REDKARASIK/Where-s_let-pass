@@ -37,7 +37,7 @@ class Map:
 
 
 if __name__ == "__main__":
-    map = Map('firstmap.tmx', 0, 0)
+    map = Map('project_of_map.tmx', 0, 0)
     while True:
         screen.fill('black')
         map.render(screen)
