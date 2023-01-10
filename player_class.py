@@ -37,34 +37,40 @@ class Player(pygame.sprite.Sprite):
 
     def update(self, *args):
         if args[0][pygame.K_f]:
-            self.cur_frame = (self.cur_frame + 1) % len(self.fight_frames)
+            self.cur_frame = 0
+            self.attack = True
+            self.walk_check = False
+        if self.attack:
             self.image = self.fight_frames[self.cur_frame]
+            self.cur_frame = (self.cur_frame + 1) % len(self.fight_frames)
             if self.transform:
                 self.image = pygame.transform.flip(self.image, True, False)
-            self.walk_check = False
+            if not self.cur_frame:
+                self.attack = False
         if self.walk_check:
             self.cur_frame = (self.cur_frame + 1) % len(self.walk_frames)
             self.image = self.walk_frames[self.cur_frame]
             if self.transform:
                 self.image = pygame.transform.flip(self.image, True, False)
-        if args[0][pygame.K_d]:
-            self.rect.x += self.speed
-            self.transform = False
-        if args[0][pygame.K_a]:
-            self.transform = True
-            self.rect.x -= self.speed
-        if args[0][pygame.K_s]:
-            self.rect.y += self.speed
-        if args[0][pygame.K_w]:
-            self.rect.y -= self.speed
-        if not ((args[0][pygame.K_w] or args[0][pygame.K_s] or args[0][pygame.K_a] or args[0][pygame.K_d]) and not args[0][pygame.K_f]):
-            self.cur_frame = (self.cur_frame + 1) % len(self.idle_frames)
-            self.image = self.idle_frames[self.cur_frame]
-            if self.transform:
-                self.image = pygame.transform.flip(self.image, True, False)
-            self.walk_check = False
-        else:
-            self.walk_check = True
+        if not self.attack:
+            if args[0][pygame.K_d]:
+                self.rect.x += self.speed
+                self.transform = False
+            if args[0][pygame.K_a]:
+                self.transform = True
+                self.rect.x -= self.speed
+            if args[0][pygame.K_s]:
+                self.rect.y += self.speed
+            if args[0][pygame.K_w]:
+                self.rect.y -= self.speed
+            if not (args[0][pygame.K_w] or args[0][pygame.K_s] or args[0][pygame.K_a] or args[0][pygame.K_d]):
+                self.cur_frame = (self.cur_frame + 1) % len(self.idle_frames)
+                self.image = self.idle_frames[self.cur_frame]
+                if self.transform:
+                    self.image = pygame.transform.flip(self.image, True, False)
+                self.walk_check = False
+            else:
+                self.walk_check = True
 
 
 if __name__ == '__main__':
