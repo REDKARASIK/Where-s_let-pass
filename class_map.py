@@ -1,5 +1,6 @@
 import pygame
 import pytmx
+from main_functions import terminate
 
 pygame.init()
 
@@ -35,6 +36,10 @@ class Map:
 if __name__ == "__main__":
     map = Map('project_of_map.tmx', 0, 0)
     while True:
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    terminate()
         screen.fill('black')
         map.render(screen)
         pygame.display.flip()
