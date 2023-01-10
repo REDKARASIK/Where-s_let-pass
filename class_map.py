@@ -7,7 +7,6 @@ screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 print(screen.get_size())
 
 
-
 class Map:
     def __init__(self, filename, free_tiles, finish_tile):
         self.map = pytmx.load_pygame(f'maps/{filename}')
@@ -25,9 +24,6 @@ class Map:
                 screen.blit(image, (x * self.tile_size, y * self.tile_size))
                 if image2:
                     screen.blit(image2, (x * self.tile_size, y * self.tile_size))
-
-
-
 
     def get_tile_id(self, position):
         return self.map.tiledgidmap[self.map.get_tile_gid(*position, 0)]
