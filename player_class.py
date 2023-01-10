@@ -1,3 +1,5 @@
+import time
+
 import pygame
 from main_functions import load_image, terminate
 
@@ -14,12 +16,15 @@ class Player(pygame.sprite.Sprite):
         self.cut_sheet(self.idle_frames, load_image('Man_idle.png'), 4, 1)
         self.walk_frames = []
         self.cut_sheet(self.walk_frames, load_image('Man_walk.png'), 6, 1)
+        self.fight_frames = []
+        self.cut_sheet(self.fight_frames, load_image('Man_attack.png'), 4, 1)
         self.cur_frame = 0
         self.image = self.idle_frames[self.cur_frame]
         self.rect = self.rect.move(x, y)
         self.transform = False
-        self.speed = 40
+        self.speed = 2
         self.walk_check = False
+        self.attack = False
 
     def cut_sheet(self, frames, sheet, columns, rows):
         self.rect = pygame.Rect(0, 0, sheet.get_width() // columns,
@@ -31,22 +36,28 @@ class Player(pygame.sprite.Sprite):
                     frame_location, self.rect.size)))
 
     def update(self, *args):
+        if args[0][pygame.K_f]:
+            self.cur_frame = (self.cur_frame + 1) % len(self.fight_frames)
+            self.image = self.fight_frames[self.cur_frame]
+            if self.transform:
+                self.image = pygame.transform.flip(self.image, True, False)
+            self.walk_check = False
         if self.walk_check:
             self.cur_frame = (self.cur_frame + 1) % len(self.walk_frames)
             self.image = self.walk_frames[self.cur_frame]
             if self.transform:
                 self.image = pygame.transform.flip(self.image, True, False)
         if args[0][pygame.K_d]:
-            self.rect.x += self.speed / fps
+            self.rect.x += self.speed
             self.transform = False
         if args[0][pygame.K_a]:
             self.transform = True
-            self.rect.x -= self.speed / fps
+            self.rect.x -= self.speed
         if args[0][pygame.K_s]:
-            self.rect.y += self.speed / fps
+            self.rect.y += self.speed
         if args[0][pygame.K_w]:
-            self.rect.y -= self.speed / fps
-        if not (args[0][pygame.K_w] or args[0][pygame.K_s] or args[0][pygame.K_a] or args[0][pygame.K_d]):
+            self.rect.y -= self.speed
+        if not ((args[0][pygame.K_w] or args[0][pygame.K_s] or args[0][pygame.K_a] or args[0][pygame.K_d]) and not args[0][pygame.K_f]):
             self.cur_frame = (self.cur_frame + 1) % len(self.idle_frames)
             self.image = self.idle_frames[self.cur_frame]
             if self.transform:
