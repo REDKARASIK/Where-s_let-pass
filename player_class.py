@@ -28,13 +28,14 @@ class Player(pygame.sprite.Sprite):
         self.attack = False
 
     def cut_sheet(self, frames, sheet, columns, rows):
+        sheet = pygame.transform.scale(sheet, (sheet.get_width() * 1.5, sheet.get_height() * 1.5))
         self.rect = pygame.Rect(0, 0, sheet.get_width() // columns,
                                 sheet.get_height() // rows)
         for j in range(rows):
             for i in range(columns):
                 frame_location = (self.rect.w * i, self.rect.h * j)
                 frames.append(sheet.subsurface(pygame.Rect(
-                    frame_location, (22, self.rect.height))))
+                    frame_location, (22 * 1.5, self.rect.height))))
 
     def update(self, *args):
         k = 22
