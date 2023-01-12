@@ -65,11 +65,9 @@ class Enemy(pygame.sprite.Sprite):
 
 if __name__ == '__main__':
     clock = pygame.time.Clock()
-    map_level = Map('project_of_map.tmx',
-                    list(map(lambda x: x + 1,
-                             [6, 7, 8, 9, 16, 17, 18, 19, 26, 27, 28, 29, 60, 61, 62, 63, 70, 71, 72, 73, 11, 12, 13,
-                              14, 21, 22,
-                              23, 24, 31, 32, 33, 34, 41, 43])), 50)
+    free_tiles = [6, 7, 8, 9, 16, 17, 18, 19, 26, 27, 28, 29, 11, 12, 13, 14, 21, 22, 23, 24, 31, 32, 33, 34, 60, 61,
+                  62, 63, 70, 71, 72, 73, 79]
+    map_level = Map('project_of_map.tmx', list(map(lambda x: x + 1, free_tiles)), 50)
     player = Player(64, 64, map_level, all_sprites)
     enemy = Enemy(120, 120, map_level, all_enemy)
     while True:
