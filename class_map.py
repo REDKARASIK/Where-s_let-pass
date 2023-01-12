@@ -16,15 +16,19 @@ class Map:
         self.tile_size = self.map.tilewidth
         self.free_tiles = free_tiles
         self.finish_tile = finish_tile
+        self.dx = 0
+        self.dy = 0
 
     def render(self, screen, dx=0, dy=0):
+        self.dx += dx
+        self.dy += dy
         for y in range(self.height):
             for x in range(self.width):
                 image = self.map.get_tile_image(x, y, 0)
                 image2 = self.map.get_tile_image(x, y, 1)
-                screen.blit(image, (x * self.tile_size + dx, y * self.tile_size + dy))
+                screen.blit(image, (x * self.tile_size + self.dx, y * self.tile_size + self.dy))
                 if image2:
-                    screen.blit(image2, (x * self.tile_size + dx, y * self.tile_size + dy))
+                    screen.blit(image2, (x * self.tile_size + self.dx, y * self.tile_size + self.dy))
 
     def get_tile_id(self, position):
         print(self.map.tiledgidmap[self.map.get_tile_gid(*position, 0)])
