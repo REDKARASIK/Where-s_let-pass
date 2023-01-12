@@ -1,5 +1,4 @@
-import pygame
-from main_functions import *
+from class_map import *
 from player_class import *
 
 pygame.init()
@@ -48,19 +47,37 @@ class Enemy(pygame.sprite.Sprite):
             self.fight_player()
 
     def follow_player(self, x1, y1, x2, y2):
+        coords_of_angles = [(x1, y1), (x1 + self.rect.width, y1), (x1 + self.rect.width, y1 + self.rect.height),
+                            (x1, y1 + self.rect.height)]
         if x1 > x2:
+            coords = list(
+                map(lambda x: [(x[0] - self.speed) // self.map_check.tile_size, x[1] // self.map_check.height],
+                    coords_of_angles))
+            for coord in coords:
+                if not (self.map_check.is_free(coord)):
+                    return 0
             self.rect.x -= self.speed
         elif x1 < x2:
+            coords = list(map(lambda x: [(x[0] + self.speed) // self.map_check.tile_size, x[1] // self.map_check.height], coords_of_angles))
+            for coord in coords:
+                if not (self.map_check.is_free(coord)):
+                    return 0
             self.rect.x += self.speed
         if y1 > y2:
+            coords = list(map(lambda x: [x[0] // self.map_check.tile_size, (x[1] - self.speed) // self.map_check.height], coords_of_angles))
+            for coord in coords:
+                if not (self.map_check.is_free(coord)):
+                    return 0
             self.rect.y -= self.speed
         elif y1 < y2:
+            coords = list(map(lambda x: [x[0] // self.map_check.tile_size, (x[1] + self.speed) // self.map_check.height], coords_of_angles))
+            for coord in coords:
+                if not (self.map_check.is_free(coord)):
+                    return 0
             self.rect.y += self.speed
 
     def fight_player(self):
         return 0
-
-
 
 
 if __name__ == '__main__':
@@ -83,6 +100,3 @@ if __name__ == '__main__':
         all_enemy.draw(screen)
         pygame.display.flip()
         clock.tick(fps)
-
-
-
