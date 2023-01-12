@@ -58,46 +58,46 @@ class Player(pygame.sprite.Sprite):
                 self.image = pygame.transform.flip(self.image, True, False)
         if not self.attack:
             if args[0][pygame.K_d]:
-                if self.map_check.is_free(((self.rect.x + self.speed) // self.map_check.tile_size,
-                                           self.rect.y // self.map_check.height)) and \
-                        self.map_check.is_free(((self.rect.x + self.rect.width + self.speed - k) // self.map_check.tile_size,
-                                                (self.rect.y + self.rect.height) // self.map_check.height)) and \
-                        self.map_check.is_free(((self.rect.x + self.rect.width + self.speed - k) // self.map_check.tile_size,
-                                           self.rect.y // self.map_check.height)) and \
-                        self.map_check.is_free(((self.rect.x + self.speed) // self.map_check.tile_size,
-                                           (self.rect.y + self.rect.height) // self.map_check.height)):
+                if self.map_check.is_free(((self.rect.x + self.speed + -self.map_check.dx) // self.map_check.tile_size,
+                                           (self.rect.y + -self.map_check.dy) // self.map_check.height)) and \
+                        self.map_check.is_free(((self.rect.x + self.rect.width + self.speed - k + -self.map_check.dx) // self.map_check.tile_size,
+                                                (self.rect.y + self.rect.height + -self.map_check.dy) // self.map_check.height)) and \
+                        self.map_check.is_free(((self.rect.x + self.rect.width + self.speed - k + -self.map_check.dx) // self.map_check.tile_size,
+                                           (self.rect.y + -self.map_check.dy) // self.map_check.height)) and \
+                        self.map_check.is_free(((self.rect.x + self.speed + -self.map_check.dx) // self.map_check.tile_size,
+                                           (self.rect.y + self.rect.height + -self.map_check.dy) // self.map_check.height)):
                     self.rect.x += self.speed
                     self.transform = False
             if args[0][pygame.K_a]:
-                if self.map_check.is_free(((self.rect.x - self.speed) // self.map_check.tile_size,
-                                           self.rect.y // self.map_check.tile_size)) and \
-                        self.map_check.is_free(((self.rect.x + self.rect.width - self.speed - k) // self.map_check.tile_size,
-                                                (self.rect.y + self.rect.height) // self.map_check.tile_size)) and \
-                        self.map_check.is_free(((self.rect.x + self.rect.width - self.speed - k) // self.map_check.tile_size,
-                                           self.rect.y // self.map_check.tile_size)) and \
-                        self.map_check.is_free(((self.rect.x - self.speed) // self.map_check.tile_size,
-                                           (self.rect.y + self.rect.height) // self.map_check.tile_size)):
+                if self.map_check.is_free(((self.rect.x - self.speed + -self.map_check.dx) // self.map_check.tile_size,
+                                           (self.rect.y + -self.map_check.dy) // self.map_check.tile_size)) and \
+                        self.map_check.is_free(((self.rect.x + self.rect.width - self.speed - k + -self.map_check.dx) // self.map_check.tile_size,
+                                                (self.rect.y + self.rect.height + -self.map_check.dy) // self.map_check.tile_size)) and \
+                        self.map_check.is_free(((self.rect.x + self.rect.width - self.speed - k + -self.map_check.dx) // self.map_check.tile_size,
+                                           (self.rect.y + -self.map_check.dy) // self.map_check.tile_size)) and \
+                        self.map_check.is_free(((self.rect.x - self.speed + -self.map_check.dx) // self.map_check.tile_size,
+                                           (self.rect.y + self.rect.height + -self.map_check.dy) // self.map_check.tile_size)):
                     self.transform = True
                     self.rect.x -= self.speed
             if args[0][pygame.K_s]:
-                if self.map_check.is_free((self.rect.x // self.map_check.tile_size,
-                                           (self.rect.y + self.speed) // self.map_check.tile_size)) and \
-                        self.map_check.is_free(((self.rect.x + self.rect.width - k) // self.map_check.tile_size,
-                                           (self.rect.y + self.rect.height + self.speed) // self.map_check.tile_size)) and \
-                        self.map_check.is_free(((self.rect.x + self.rect.width - k) // self.map_check.tile_size,
-                                           (self.rect.y + self.speed) // self.map_check.tile_size)) and \
-                        self.map_check.is_free((self.rect.x // self.map_check.tile_size,
-                                           (self.rect.y + self.rect.height + self.speed) // self.map_check.tile_size)):
+                if self.map_check.is_free(((self.rect.x + -self.map_check.dx) // self.map_check.tile_size,
+                                           (self.rect.y + self.speed + -self.map_check.dy) // self.map_check.tile_size)) and \
+                        self.map_check.is_free(((self.rect.x + self.rect.width - k + -self.map_check.dx) // self.map_check.tile_size,
+                                           (self.rect.y + self.rect.height + self.speed + -self.map_check.dy) // self.map_check.tile_size)) and \
+                        self.map_check.is_free(((self.rect.x + self.rect.width - k + -self.map_check.dx) // self.map_check.tile_size,
+                                           (self.rect.y + self.speed + -self.map_check.dy) // self.map_check.tile_size)) and \
+                        self.map_check.is_free(((self.rect.x + -self.map_check.dx) // self.map_check.tile_size,
+                                           (self.rect.y + self.rect.height + self.speed + -self.map_check.dy) // self.map_check.tile_size)):
                     self.rect.y += self.speed
             if args[0][pygame.K_w]:
-                if self.map_check.is_free((self.rect.x // self.map_check.tile_size,
-                                           (self.rect.y - self.speed) // self.map_check.tile_size)) and \
-                        self.map_check.is_free(((self.rect.x + self.rect.width - k) // self.map_check.tile_size,
-                                           (self.rect.y + self.rect.height - self.speed) // self.map_check.tile_size)) and \
-                        self.map_check.is_free(((self.rect.x + self.rect.width - k) // self.map_check.tile_size,
-                                           (self.rect.y - self.speed) // self.map_check.tile_size)) and \
-                        self.map_check.is_free((self.rect.x // self.map_check.tile_size,
-                                           ((self.rect.y + self.rect.height) - self.speed) // self.map_check.tile_size)):
+                if self.map_check.is_free(((self.rect.x + -self.map_check.dx) // self.map_check.tile_size,
+                                           (self.rect.y - self.speed + -self.map_check.dy) // self.map_check.tile_size)) and \
+                        self.map_check.is_free(((self.rect.x + self.rect.width - k + -self.map_check.dx) // self.map_check.tile_size,
+                                           (self.rect.y + self.rect.height - self.speed + -self.map_check.dy) // self.map_check.tile_size)) and \
+                        self.map_check.is_free(((self.rect.x + self.rect.width - k + -self.map_check.dx) // self.map_check.tile_size,
+                                           (self.rect.y - self.speed + -self.map_check.dy) // self.map_check.tile_size)) and \
+                        self.map_check.is_free(((self.rect.x + -self.map_check.dx) // self.map_check.tile_size,
+                                           (((self.rect.y + -self.map_check.dy) + self.rect.height) - self.speed) // self.map_check.tile_size)):
                     self.rect.y -= self.speed
             if not (args[0][pygame.K_w] or args[0][pygame.K_s] or args[0][pygame.K_a] or args[0][pygame.K_d]):
                 if self.walk_check:
