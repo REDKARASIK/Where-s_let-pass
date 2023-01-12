@@ -4,7 +4,7 @@ from main_functions import terminate
 from main_functions import load_image
 from player_class import Player
 from class_map import Map
-
+# лучший класс отвечаю!!!!!!!!!
 pygame.init()
 size = width, height = 500, 500
 screen = pygame.display.set_mode(size)
