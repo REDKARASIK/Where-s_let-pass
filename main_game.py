@@ -23,7 +23,7 @@ def main_game(screen, name_level):
     player = Player(64, 64, map_level, player_group)
     player.speed = 30 / fps
     DowerChest((100, 70), player, all_sprites)
-    camera = Camera(screen, start_pos)
+    camera = Camera(screen, start_pos, map_level.width * map_level.tile_size, map_level.height * map_level.tile_size)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
