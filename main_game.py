@@ -9,7 +9,7 @@ pygame.init()
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 player_group = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
-fps = 20
+fps = 10
 
 
 def main_game(screen, name_level):
@@ -19,7 +19,7 @@ def main_game(screen, name_level):
     map_level = Map(name_level,
                     list(map(lambda x: x + 1, free_tiles)), 50)
     player = Player(64, 64, map_level, player_group)
-    player.speed = 40 / fps
+    player.speed = 30 / fps
     DowerChest((100, 70), player, all_sprites)
     while True:
         for event in pygame.event.get():

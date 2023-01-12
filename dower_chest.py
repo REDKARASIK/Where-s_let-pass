@@ -17,8 +17,8 @@ fps = 15
 
 
 class DowerChest(pygame.sprite.Sprite):
-    imageopen = pygame.transform.scale(load_image("chestopen.png", 'white'), (16, 16))
-    imageclosed = pygame.transform.scale(load_image("chestclosed.png", 'white'), (16, 16))
+    imageopen = pygame.transform.scale(load_image("chestopen.png", 'white'), (24, 24))
+    imageclosed = pygame.transform.scale(load_image("chestclosed.png", 'white'), (24, 24))
 
     def __init__(self, pos, player, *group):
         super().__init__(*group)

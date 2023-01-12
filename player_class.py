@@ -38,7 +38,7 @@ class Player(pygame.sprite.Sprite):
                     frame_location, (22 * 1.5, self.rect.height))))
 
     def update(self, *args):
-        k = 22
+        k = 22 * 1.5
         if args[0][pygame.K_f]:
             self.cur_frame = 0
             self.attack = True
