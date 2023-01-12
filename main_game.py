@@ -20,8 +20,8 @@ def main_game(screen, name_level):
     map_level = Map(name_level,
                     list(map(lambda x: x + 1, free_tiles)), 50)
     start_pos = (64, 64)
-    player = Player(64, 64, map_level, player_group)
-    player.speed = 30 / fps
+    player = Player(*start_pos, map_level, player_group)
+    player.speed = 35 / fps
     DowerChest((100, 70), player, all_sprites)
     camera = Camera(screen, start_pos, map_level.width * map_level.tile_size, map_level.height * map_level.tile_size)
     while True:
@@ -29,8 +29,8 @@ def main_game(screen, name_level):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     terminate()
-        camera.update(player)
         screen.fill('black')
+        camera.update(player)
         map_level.render(screen, *camera.apply())
         for sprite in all_sprites:
             camera.apply(sprite)
