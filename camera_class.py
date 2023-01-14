@@ -38,6 +38,6 @@ class Camera:
         self.dy = -(target.rect.y - self.start_pos[1])
         self.start_pos = (target.rect.x, target.rect.y)
         if self.stop:
-            target.speed = self.speed * 2
+            target.speed = self.speed * 1.5
         else:
             target.speed = self.speed
