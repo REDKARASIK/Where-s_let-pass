@@ -32,9 +32,9 @@ class Player(pygame.sprite.Sprite):
         self.speed = 10
         self.walk_check = False
         self.attack = False
-        self.damage_1 = 10
+        self.damage_1 = 20
         self.attack_2 = False
-        self.damage_2 = 20
+        self.damage_2 = 10
         self.health = 100
 
     def cut_sheet(self, frames, sheet, columns, rows):
@@ -56,6 +56,9 @@ class Player(pygame.sprite.Sprite):
         if not self.cur_frame:
             self.attack = False
             self.cur_frame = 0
+            collide_enemy = pygame.sprite.spritecollideany(self, self.enemy_group)
+            if collide_enemy:
+                collide_enemy.health -= self.damage_1
 
     def attack_2_func(self):
         self.image = self.fight_frames_2[self.cur_frame]
@@ -65,6 +68,9 @@ class Player(pygame.sprite.Sprite):
         if not self.cur_frame:
             self.attack_2 = False
             self.cur_frame = 0
+            collide_enemy = pygame.sprite.spritecollideany(self, self.enemy_group)
+            if collide_enemy:
+                collide_enemy.health -= self.damage_2
 
     def update(self, *args):
         k = 40

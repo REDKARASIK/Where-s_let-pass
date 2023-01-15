@@ -28,6 +28,7 @@ class Enemy(pygame.sprite.Sprite):
         self.attack = True
         self.health = 100
         self.damage = 10
+        self.dead = True
 
     def cut_sheet(self, frames, sheet, columns, rows):
         k = 1
@@ -55,19 +56,24 @@ class Enemy(pygame.sprite.Sprite):
         x, y = self.rect.x, self.rect.y
         distance = ((target_x - x) ** 2 + (target_y - y) ** 2) ** 0.5
 
-        if not (pygame.sprite.collide_rect(self, player)) and distance <= 200:
+        if not (pygame.sprite.collide_rect(self, player)) and distance <= 200 and self.dead:
             if not self.walk_check:
                 self.cur_frame = 0
             self.follow_player(x, y, target_x, target_y)
             self.walk_player()
-        if pygame.sprite.collide_rect(self, player):
+        if pygame.sprite.collide_rect(self, player) and self.dead:
             if self.attack:
                 self.cur_frame = 0
             self.fight_player()
-        if distance >= 200:
+        if distance >= 200 and self.dead:
             if self.walk_check or not self.attack:
                 self.cur_frame = 0
             self.idle_enemy()
+        if self.health <= 0:
+            if self.dead:
+                self.cur_frame = 0
+            self.dead_enemy()
+
 
     def follow_player(self, x1, y1, x2, y2):
         coords_of_angles = [(x1, y1), (x1 + self.rect.width, y1), (x1 + self.rect.width, y1 + self.rect.height),
@@ -126,11 +132,12 @@ class Enemy(pygame.sprite.Sprite):
         self.attack = True
 
     def dead_enemy(self):
-        self.cur_frame = (self.cur_frame + 1) % len(self.dead_frames)
-        self.image = self.dead_frames[self.cur_frame]
-        if self.transform:
-            self.image = pygame.transform.flip(self.image, True, False)
-
+        self.dead = False
+        if self.cur_frame != len(self.dead_frames) - 1:
+            self.cur_frame = (self.cur_frame + 1) % len(self.dead_frames)
+            self.image = self.dead_frames[self.cur_frame]
+            if self.transform:
+                self.image = pygame.transform.flip(self.image, True, False)
 
 if __name__ == '__main__':
     clock = pygame.time.Clock()
@@ -138,7 +145,7 @@ if __name__ == '__main__':
                   62, 63, 70, 71, 72, 73, 79]
     map_level = Map('project_of_map.tmx',
                     list(map(lambda x: x + 1, free_tiles)), 50)
-    player = Player(64, 64, map_level, all_sprites)
+    player = Player(64, 64, map_level, all_enemy, all_sprites)
     enemy = Enemy(120, 120, map_level, all_enemy)
     while True:
         for event in pygame.event.get():
