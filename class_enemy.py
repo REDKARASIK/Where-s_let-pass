@@ -48,7 +48,7 @@ class Enemy(pygame.sprite.Sprite):
                 frames.append(image)
 
     def update(self, *args):
-        if self.hurt_check and not self.attack:
+        if self.hurt_check and not self.attack and self.dead:
             self.hurt()
         else:
             target_x, target_y = self.player.rect.x, self.player.rect.y

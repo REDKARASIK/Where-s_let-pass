@@ -34,9 +34,9 @@ class Player(pygame.sprite.Sprite):
         self.speed = 10
         self.walk_check = False
         self.attack = False
-        self.damage_1 = 20
+        self.damage_1 = 10
         self.attack_2 = False
-        self.damage_2 = 10
+        self.damage_2 = 20
         self.health = 100
         self.hurt_check = False
 
