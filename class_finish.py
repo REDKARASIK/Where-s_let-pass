@@ -28,7 +28,13 @@ class Finish(pygame.sprite.Sprite):
         self.rect.y = pos[1]
 
     def is_finish(self):
-        if pygame.sprite.collide_rect(self, self.player):
+        image = pygame.Surface([self.player.rect.width - 40, self.player.rect.height])
+        sprite = pygame.sprite.Sprite()
+        sprite.image = image
+        sprite.rect = image.get_rect()
+        sprite.rect.x = self.player.rect.x + 40
+        sprite.rect.y = self.player.rect.y
+        if pygame.sprite.collide_rect(self, sprite):
             return 1
 
 
