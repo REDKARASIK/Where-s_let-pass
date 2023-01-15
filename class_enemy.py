@@ -35,6 +35,7 @@ class Enemy(pygame.sprite.Sprite):
         self.dead = True
         self.player = player
         self.time = 0
+        self.mask = pygame.mask.from_surface(self.image)
 
     def cut_sheet(self, frames, sheet, columns, rows):
         k = 1
@@ -54,12 +55,14 @@ class Enemy(pygame.sprite.Sprite):
             target_x, target_y = self.player.rect.x, self.player.rect.y
             x, y = self.rect.x, self.rect.y
             distance = ((target_x - x) ** 2 + (target_y - y) ** 2) ** 0.5
-            if not (pygame.sprite.collide_rect(self, self.player)) and distance <= 200 and self.dead:
+            self.mask = pygame.mask.from_surface(self.image)
+            self.player.mask = pygame.mask.from_surface(self.player.image)
+            if not (pygame.sprite.collide_mask(self, self.player)) and distance <= 200 and self.dead:
                 if not self.walk_check:
                     self.cur_frame = 0
                 self.walk_player()
                 self.follow_player(x, y, target_x, target_y)
-            if pygame.sprite.collide_rect(self, self.player) and self.dead and self.time == 0:
+            if pygame.sprite.collide_mask(self, self.player) and self.dead and self.time == 0:
                 if not self.attack or self.walk_check:
                     self.cur_frame = 0
                 self.fight_player()

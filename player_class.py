@@ -1,7 +1,7 @@
 import pygame
 
-from main_functions import load_image, terminate
 from class_map import Map
+from main_functions import load_image, terminate
 
 pygame.init()
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -39,6 +39,7 @@ class Player(pygame.sprite.Sprite):
         self.damage_2 = 20
         self.health = 100
         self.hurt_check = False
+        self.mask = pygame.mask.from_surface(self.image)
 
     def cut_sheet(self, frames, sheet, columns, rows):
         k = 0.9
@@ -92,7 +93,7 @@ class Player(pygame.sprite.Sprite):
         if self.hurt_check and not self.attack and not self.attack_2:
             self.hurt()
         else:
-            k = 40
+            k = 45
             if args[0][pygame.K_f] and not self.attack_2 and not self.attack:
                 self.cur_frame = 0
                 self.attack = True
@@ -111,17 +112,20 @@ class Player(pygame.sprite.Sprite):
                 if self.transform:
                     self.image = pygame.transform.flip(self.image, True, False)
             if not self.attack and not self.attack_2:
+                self.rect = self.image.get_rect().move(self.rect.x, self.rect.y)
                 if args[0][pygame.K_d]:
                     if self.map_check.is_free(
                             ((self.rect.x + self.speed + -self.map_check.dx + k) // self.map_check.tile_size,
                              (self.rect.y + -self.map_check.dy) // self.map_check.height)) and \
-                            self.map_check.is_free(((self.rect.x + self.rect.width + self.speed - k + -self.map_check.dx)
-                                                    // self.map_check.tile_size,
-                                                    (self.rect.y + self.rect.height + -self.map_check.dy)
-                                                    // self.map_check.height)) and \
-                            self.map_check.is_free(((self.rect.x + self.rect.width + self.speed - k + -self.map_check.dx)
-                                                    // self.map_check.tile_size,
-                                                    (self.rect.y + -self.map_check.dy) // self.map_check.height)) and \
+                            self.map_check.is_free(
+                                ((self.rect.x + self.rect.width + self.speed - k + -self.map_check.dx)
+                                 // self.map_check.tile_size,
+                                 (self.rect.y + self.rect.height + -self.map_check.dy)
+                                 // self.map_check.height)) and \
+                            self.map_check.is_free(
+                                ((self.rect.x + self.rect.width + self.speed - k + -self.map_check.dx)
+                                 // self.map_check.tile_size,
+                                 (self.rect.y + -self.map_check.dy) // self.map_check.height)) and \
                             self.map_check.is_free(((self.rect.x + self.speed + -self.map_check.dx + k)
                                                     // self.map_check.tile_size,
                                                     (self.rect.y + self.rect.height + -self.map_check.dy)
@@ -132,13 +136,15 @@ class Player(pygame.sprite.Sprite):
                     if self.map_check.is_free(
                             ((self.rect.x - self.speed + -self.map_check.dx + k) // self.map_check.tile_size,
                              (self.rect.y + -self.map_check.dy) // self.map_check.height)) and \
-                            self.map_check.is_free(((self.rect.x + self.rect.width - self.speed - k + -self.map_check.dx)
-                                                    // self.map_check.tile_size,
-                                                    (self.rect.y + self.rect.height + -self.map_check.dy)
-                                                    // self.map_check.height)) and \
-                            self.map_check.is_free(((self.rect.x + self.rect.width - self.speed - k + -self.map_check.dx)
-                                                    // self.map_check.tile_size,
-                                                    (self.rect.y + -self.map_check.dy) // self.map_check.height)) and \
+                            self.map_check.is_free(
+                                ((self.rect.x + self.rect.width - self.speed - k + -self.map_check.dx)
+                                 // self.map_check.tile_size,
+                                 (self.rect.y + self.rect.height + -self.map_check.dy)
+                                 // self.map_check.height)) and \
+                            self.map_check.is_free(
+                                ((self.rect.x + self.rect.width - self.speed - k + -self.map_check.dx)
+                                 // self.map_check.tile_size,
+                                 (self.rect.y + -self.map_check.dy) // self.map_check.height)) and \
                             self.map_check.is_free(((self.rect.x - self.speed + -self.map_check.dx + k)
                                                     // self.map_check.tile_size,
                                                     (self.rect.y + self.rect.height + -self.map_check.dy)
