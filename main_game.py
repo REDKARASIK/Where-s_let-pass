@@ -31,7 +31,7 @@ def main_game(screen, name_level):
     camera = Camera(screen, start_pos, map_level.width * map_level.tile_size, map_level.height * map_level.tile_size,
                     player.speed)
     enemy = Enemy(120, 120, map_level, player, enemy_group, all_sprites)
-    finish = Finish((128, 120), player, finish_group, all_sprites)
+    finish = Finish((128, 120), player, all_sprites)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -46,7 +46,6 @@ def main_game(screen, name_level):
         player_group.draw(screen)
         player_group.update(pygame.key.get_pressed())
         all_sprites.update(pygame.key.get_pressed())
-        finish_group.draw(screen)
         if finish.is_finish():
             print('FINISH')
             exit()
