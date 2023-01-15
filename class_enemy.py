@@ -158,7 +158,7 @@ if __name__ == '__main__':
     map_level = Map('project_of_map.tmx',
                     list(map(lambda x: x + 1, free_tiles)), 50)
     player = Player(64, 64, map_level, all_enemy, all_sprites)
-    enemy = Enemy(120, 120, map_level, all_enemy)
+    enemy = Enemy(120, 120, map_level, player, all_enemy)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
