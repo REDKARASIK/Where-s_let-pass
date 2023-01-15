@@ -8,7 +8,7 @@ fps = 25
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, x, y, level, *groups):
+    def __init__(self, x, y, level, player, *groups):
         super().__init__(*groups)
         self.map_check = level
         self.idle_frames = []
@@ -29,6 +29,7 @@ class Enemy(pygame.sprite.Sprite):
         self.health = 100
         self.damage = 10
         self.dead = True
+        self.player = player
 
     def cut_sheet(self, frames, sheet, columns, rows):
         k = 1
@@ -50,18 +51,17 @@ class Enemy(pygame.sprite.Sprite):
                 image = sheet.subsurface(pygame.Rect(frame_location, (self.rect.width, self.rect.height)))
                 frames.append(image)
 
-    def update(self, player):
-        self.player = player
-        target_x, target_y = player.rect.x, player.rect.y
+    def update(self, *args):
+        target_x, target_y = self.player.rect.x, self.player.rect.y
         x, y = self.rect.x, self.rect.y
         distance = ((target_x - x) ** 2 + (target_y - y) ** 2) ** 0.5
 
-        if not (pygame.sprite.collide_rect(self, player)) and distance <= 200 and not self.dead:
+        if not (pygame.sprite.collide_rect(self, self.player)) and distance <= 200 and self.dead:
             if not self.walk_check:
                 self.cur_frame = 0
             self.walk_player()
             self.follow_player(x, y, target_x, target_y)
-        if pygame.sprite.collide_rect(self, player) and self.dead:
+        if pygame.sprite.collide_rect(self, self.player) and self.dead:
             if self.attack:
                 self.cur_frame = 0
             self.fight_player()
@@ -74,33 +74,36 @@ class Enemy(pygame.sprite.Sprite):
                 self.cur_frame = 0
             self.dead_enemy()
 
-
     def follow_player(self, x1, y1, x2, y2):
         coords_of_angles = [(x1, y1), (x1 + self.rect.width, y1), (x1 + self.rect.width, y1 + self.rect.height),
                             (x1, y1 + self.rect.height)]
         if x1 > x2:
             coords = list(
-                map(lambda x: [(x[0] - self.speed) // self.map_check.tile_size, x[1] // self.map_check.height],
+                map(lambda x: [(x[0] - self.speed - self.map_check.dx) // self.map_check.tile_size,
+                               (x[1] - self.map_check.dy) // self.map_check.height],
                     coords_of_angles))
             if all(self.map_check.is_free(coord) for coord in coords):
                 self.rect.x -= self.speed
                 self.transform = True
         if x1 < x2:
             coords = list(
-                map(lambda x: [(x[0] + self.speed) // self.map_check.tile_size, x[1] // self.map_check.height],
+                map(lambda x: [(x[0] + self.speed - self.map_check.dx) // self.map_check.tile_size,
+                               (x[1] - self.map_check.dy) // self.map_check.height],
                     coords_of_angles))
             if all(self.map_check.is_free(coord) for coord in coords):
                 self.rect.x += self.speed
                 self.transform = False
         if y1 > y2:
             coords = list(
-                map(lambda x: [x[0] // self.map_check.tile_size, (x[1] - self.speed) // self.map_check.height],
+                map(lambda x: [(x[0] - self.map_check.dx) // self.map_check.tile_size,
+                               (x[1] - self.speed - self.map_check.dy) // self.map_check.height],
                     coords_of_angles))
             if all(self.map_check.is_free(coord) for coord in coords):
                 self.rect.y -= self.speed
         if y1 < y2:
             coords = list(
-                map(lambda x: [x[0] // self.map_check.tile_size, (x[1] + self.speed) // self.map_check.height],
+                map(lambda x: [(x[0] - self.map_check.dx) // self.map_check.tile_size,
+                               (x[1] + self.speed - self.map_check.dy) // self.map_check.height],
                     coords_of_angles))
             if all(self.map_check.is_free(coord) for coord in coords):
                 self.rect.y += self.speed
@@ -138,6 +141,7 @@ class Enemy(pygame.sprite.Sprite):
             self.image = self.dead_frames[self.cur_frame]
             if self.transform:
                 self.image = pygame.transform.flip(self.image, True, False)
+
 
 if __name__ == '__main__':
     clock = pygame.time.Clock()
