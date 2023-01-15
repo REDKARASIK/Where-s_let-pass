@@ -32,9 +32,11 @@ class DowerChest(pygame.sprite.Sprite):
         self.rect.y = pos[1]
 
     def update(self, *args):
-        if pygame.sprite.collide_rect(self, self.player) and args[0][pygame.K_e]:
+        if pygame.sprite.collide_rect(self, self.player) and args[0][pygame.K_e] and self.image == DowerChest.imageclosed:
             self.image = DowerChest.imageopen
-            # return self.item
+            self.player.health += 20
+            if self.player.health > 100:
+                self.player.health = 100
 
 
 if __name__ == '__main__':
