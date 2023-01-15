@@ -44,7 +44,7 @@ class Player(pygame.sprite.Sprite):
                 frames.append(sheet.subsurface(pygame.Rect(
                     frame_location, (self.rect.width, self.rect.height))))
 
-    def update(self, enemy=None, *args):
+    def update(self, *args):
         k = self.rect.width
         if args[0][pygame.K_f] and not self.attack_2:
             self.cur_frame = 0
@@ -58,8 +58,6 @@ class Player(pygame.sprite.Sprite):
             if not self.cur_frame:
                 self.attack = False
                 self.cur_frame = 0
-            if self.cur_frame + 1 == len(self.fight_frames):
-                self.enemy.health -= self.damage_1
         if args[0][pygame.K_g] and not self.attack:
             self.cur_frame = 0
             self.attack_2 = True
@@ -72,8 +70,6 @@ class Player(pygame.sprite.Sprite):
             if not self.cur_frame:
                 self.attack_2 = False
                 self.cur_frame = 0
-            if self.cur_frame + 1 == len(self.fight_frames):
-                self.enemy.health -= self.damage_2
         if self.walk_check:
             self.cur_frame = (self.cur_frame + 1) % len(self.walk_frames)
             self.image = self.walk_frames[self.cur_frame]
