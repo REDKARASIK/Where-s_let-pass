@@ -31,7 +31,6 @@ class Map:
                     screen.blit(image2, (x * self.tile_size + self.dx, y * self.tile_size + self.dy))
 
     def get_tile_id(self, position):
-        print(self.map.tiledgidmap[self.map.get_tile_gid(*position, 0)])
         return self.map.tiledgidmap[self.map.get_tile_gid(*position, 0)]
 
     def is_free(self, position):

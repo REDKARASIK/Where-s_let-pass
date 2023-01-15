@@ -12,5 +12,3 @@ if c == 1:
 if c == 2:
     # start level
     pass
-
-
