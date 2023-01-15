@@ -8,6 +8,7 @@ from camera_class import Camera
 from class_enemy import Enemy
 from class_finish import Finish
 from health_class import health
+from settup import settings
 
 pygame.init()
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -36,7 +37,7 @@ def main_game(screen, name_level):
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    terminate()
+                    settings(screen)
         screen.fill('black')
         camera.update(player)
         map_level.render(screen, *camera.apply())
