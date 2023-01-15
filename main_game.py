@@ -27,13 +27,14 @@ def main_game(screen, name_level):
                     list(map(lambda x: x + 1, free_tiles)), 50)
     start_pos = (50, 400)
     player = Player(*start_pos, map_level, enemy_group, player_group)
-    player.speed = 35 / fps
+    player.speed_1 = 35 / fps
+    player.speed_2 = 50 / fps
     DowerChest((100, 70), screen, player, all_sprites)
     Health((1300, 800), player, screen, player_stats)
     Stamina((1300, 820), player, screen, player_stats)
     camera = Camera(screen, start_pos, map_level.width * map_level.tile_size, map_level.height * map_level.tile_size,
                     player.speed)
-    enemy = Enemy(120, 120, map_level, player, enemy_group, all_sprites)
+    Enemy(120, 120, map_level, player, enemy_group, all_sprites)
     finish = Finish((1845, 75), player, all_sprites)
     while True:
         for event in pygame.event.get():

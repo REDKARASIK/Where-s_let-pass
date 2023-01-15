@@ -28,10 +28,11 @@ class Player(pygame.sprite.Sprite):
         self.hurt_frames = []
         self.cut_sheet(self.hurt_frames, load_image('Hurt.png', 'white'), 3, 1)
         self.cur_frame = 0
+        self.run_frames = []
+        self.cut_sheet(self.run_frames, load_image('Run.png', 'white'), 8, 1)
         self.image = self.idle_frames[self.cur_frame]
         self.rect = self.rect.move(x, y)
         self.transform = False
-        self.speed = 10
         self.walk_check = False
         self.attack = False
         self.damage_1 = 10
@@ -43,6 +44,10 @@ class Player(pygame.sprite.Sprite):
         self.stamina = 100
         self.stamina_up = 0
         self.stamina_up_time = 20
+        self.run_check = False
+        self.speed_2 = 15
+        self.speed_1 = 10
+        self.speed = self.speed_1
 
     def cut_sheet(self, frames, sheet, columns, rows):
         k = 0.9
@@ -92,6 +97,12 @@ class Player(pygame.sprite.Sprite):
             self.hurt_check = False
             self.cur_frame = 0
 
+    def run(self):
+        self.image = self.run_frames[self.cur_frame]
+        self.cur_frame = (self.cur_frame + 1) % len(self.run_frames)
+        if self.transform:
+            self.image = pygame.transform.flip(self.image, True, False)
+
     def update(self, *args):
         self.stamina_up = (self.stamina_up + 1) % self.stamina_up_time
         print(self.stamina_up)
@@ -124,8 +135,15 @@ class Player(pygame.sprite.Sprite):
                 self.image = self.walk_frames[self.cur_frame]
                 if self.transform:
                     self.image = pygame.transform.flip(self.image, True, False)
+            if self.run_check:
+                self.run()
             if not self.attack and not self.attack_2:
                 self.rect = self.image.get_rect().move(self.rect.x, self.rect.y)
+                if pygame.key.get_mods() & pygame.KMOD_SHIFT and self.stamina >= 5:
+                    self.stamina -= 2.5
+                    self.speed = self.speed_2
+                else:
+                    self.speed = self.speed_1
                 if args[0][pygame.K_d]:
                     if self.map_check.is_free(
                             ((self.rect.x + self.speed + -self.map_check.dx + k) // self.map_check.tile_size,
@@ -197,17 +215,23 @@ class Player(pygame.sprite.Sprite):
                                                               self.rect.y + -self.map_check.dy) + self.rect.height) - self.speed) // self.map_check.height)):
                         self.rect.y -= self.speed
                 if not (args[0][pygame.K_w] or args[0][pygame.K_s] or args[0][pygame.K_a] or args[0][pygame.K_d]):
-                    if self.walk_check:
+                    if self.walk_check or self.run_check:
                         self.cur_frame = 0
                     self.cur_frame = (self.cur_frame + 1) % len(self.idle_frames)
                     self.image = self.idle_frames[self.cur_frame]
                     if self.transform:
                         self.image = pygame.transform.flip(self.image, True, False)
                     self.walk_check = False
+                    self.run_check = False
                 else:
-                    if not self.walk_check:
+                    if not self.walk_check and not self.run_check:
                         self.cur_frame = 0
-                    self.walk_check = True
+                    if pygame.key.get_mods() & pygame.KMOD_SHIFT and self.stamina >= 5:
+                        self.run_check = True
+                        self.walk_check = False
+                    else:
+                        self.walk_check = True
+                        self.run_check = False
 
 
 if __name__ == '__main__':
