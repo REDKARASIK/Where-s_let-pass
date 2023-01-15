@@ -7,13 +7,13 @@ from player_class import Player
 from camera_class import Camera
 from class_enemy import Enemy
 from class_finish import Finish
+from health_class import health
 
 pygame.init()
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 player_group = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 enemy_group = pygame.sprite.Group()
-finish_group = pygame.sprite.Group()
 fps = 10
 
 
@@ -22,11 +22,12 @@ def main_game(screen, name_level):
     free_tiles = [6, 7, 8, 9, 16, 17, 18, 19, 26, 27, 28, 29, 11, 12, 13, 14, 21, 22, 23, 24, 31, 32, 33, 34, 60, 61,
                   62, 63, 70, 71, 72, 73, 79]
     map_level = Map(name_level,
-                    list(map(lambda x: x + 1, free_tiles)), 75)
+                    list(map(lambda x: x + 1, free_tiles)), 50)
     start_pos = (50, 400)
     player = Player(*start_pos, map_level, enemy_group, player_group)
-    player.speed = 100 / fps
+    player.speed = 35 / fps
     DowerChest((100, 70), player, all_sprites)
+    health((1000, 660), player, screen, all_sprites)
     camera = Camera(screen, start_pos, map_level.width * map_level.tile_size, map_level.height * map_level.tile_size,
                     player.speed)
     enemy = Enemy(120, 120, map_level, player, enemy_group, all_sprites)

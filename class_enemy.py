@@ -1,4 +1,5 @@
 from player_class import *
+import time
 
 pygame.init()
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -25,11 +26,12 @@ class Enemy(pygame.sprite.Sprite):
         self.transform = False
         self.speed = 7
         self.walk_check = False
-        self.attack = True
+        self.attack = False
         self.health = 100
         self.damage = 10
         self.dead = True
         self.player = player
+        self.time = 0
 
     def cut_sheet(self, frames, sheet, columns, rows):
         k = 1
@@ -61,18 +63,21 @@ class Enemy(pygame.sprite.Sprite):
                 self.cur_frame = 0
             self.walk_player()
             self.follow_player(x, y, target_x, target_y)
-        if pygame.sprite.collide_rect(self, self.player) and self.dead:
-            if self.attack:
+        if pygame.sprite.collide_rect(self, self.player) and self.dead and self.time == 0:
+            if not self.attack or self.walk_check:
                 self.cur_frame = 0
             self.fight_player()
-        if distance >= 200 and self.dead:
-            if self.walk_check or not self.attack:
+        if (distance >= 200 and self.dead) or (self.dead and self.time != 0):
+            if self.walk_check or self.attack:
                 self.cur_frame = 0
             self.idle_enemy()
         if self.health <= 0:
             if self.dead:
                 self.cur_frame = 0
             self.dead_enemy()
+        if self.time > 0:
+            self.time -= 1
+        print(self.health)
 
     def follow_player(self, x1, y1, x2, y2):
         coords_of_angles = [(x1, y1), (x1 + self.rect.width, y1), (x1 + self.rect.width, y1 + self.rect.height),
@@ -109,12 +114,15 @@ class Enemy(pygame.sprite.Sprite):
                 self.rect.y += self.speed
 
     def fight_player(self):
-        self.player.health -= self.damage
         self.image = self.fight_frames[self.cur_frame]
         self.cur_frame = (self.cur_frame + 1) % len(self.fight_frames)
         if self.transform:
             self.image = pygame.transform.flip(self.image, True, False)
-        self.attack = False
+        if self.cur_frame == 0:
+            self.player.health -= self.damage
+            self.time = 25
+            self.attack = False
+        self.attack = True
         self.walk_check = False
 
     def walk_player(self):
@@ -131,7 +139,7 @@ class Enemy(pygame.sprite.Sprite):
         self.image = self.idle_frames[self.cur_frame]
         if self.transform:
             self.image = pygame.transform.flip(self.image, True, False)
-        self.attack = True
+        self.attack = False
 
     def dead_enemy(self):
         self.dead = False
