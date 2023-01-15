@@ -21,7 +21,6 @@ class Enemy(pygame.sprite.Sprite):
         self.cut_sheet(self.dead_frames, load_image('zombie_Dead.png', 'white'), 5, 1)
         self.cur_frame = 0
         self.image = self.idle_frames[self.cur_frame]
-        self.rect = self.image.get_rect()
         self.rect = self.rect.move(x, y)
         self.transform = False
         self.speed = 7
@@ -31,7 +30,7 @@ class Enemy(pygame.sprite.Sprite):
         self.damage = 10
 
     def cut_sheet(self, frames, sheet, columns, rows):
-        k = 0.7
+        k = 1
         sheet = pygame.transform.scale(sheet, (int(sheet.get_width() * k), int(sheet.get_height() * k)))
         self.rect = pygame.Rect(0, 0, sheet.get_width() // columns,
                                 sheet.get_height() // rows)
@@ -56,6 +55,8 @@ class Enemy(pygame.sprite.Sprite):
         distance = ((target_x - x) ** 2 + (target_y - y) ** 2) ** 0.5
 
         if not (pygame.sprite.collide_rect(self, player)) and distance <= 200:
+            if not self.walk_check:
+                self.cur_frame = 0
             self.follow_player(x, y, target_x, target_y)
             self.walk_player()
         if pygame.sprite.collide_rect(self, player):
@@ -63,6 +64,8 @@ class Enemy(pygame.sprite.Sprite):
                 self.cur_frame = 0
             self.fight_player()
         if distance >= 200:
+            if self.walk_check or not self.attack:
+                self.cur_frame = 0
             self.idle_enemy()
 
     def follow_player(self, x1, y1, x2, y2):
@@ -102,8 +105,10 @@ class Enemy(pygame.sprite.Sprite):
         if self.transform:
             self.image = pygame.transform.flip(self.image, True, False)
         self.attack = False
+        self.walk_check = False
 
     def walk_player(self):
+        self.walk_check = True
         self.attack = True
         self.cur_frame = (self.cur_frame + 1) % len(self.walk_frames)
         self.image = self.walk_frames[self.cur_frame]
@@ -111,10 +116,12 @@ class Enemy(pygame.sprite.Sprite):
             self.image = pygame.transform.flip(self.image, True, False)
 
     def idle_enemy(self):
+        self.walk_check = False
         self.cur_frame = (self.cur_frame + 1) % len(self.idle_frames)
         self.image = self.idle_frames[self.cur_frame]
         if self.transform:
             self.image = pygame.transform.flip(self.image, True, False)
+        self.attack = True
 
     def dead_enemy(self):
         self.cur_frame = (self.cur_frame + 1) % len(self.dead_frames)
