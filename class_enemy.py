@@ -56,11 +56,11 @@ class Enemy(pygame.sprite.Sprite):
         x, y = self.rect.x, self.rect.y
         distance = ((target_x - x) ** 2 + (target_y - y) ** 2) ** 0.5
 
-        if not (pygame.sprite.collide_rect(self, player)) and distance <= 200 and self.dead:
+        if not (pygame.sprite.collide_rect(self, player)) and distance <= 200 and not self.dead:
             if not self.walk_check:
                 self.cur_frame = 0
-            self.follow_player(x, y, target_x, target_y)
             self.walk_player()
+            self.follow_player(x, y, target_x, target_y)
         if pygame.sprite.collide_rect(self, player) and self.dead:
             if self.attack:
                 self.cur_frame = 0

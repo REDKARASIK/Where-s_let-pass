@@ -5,6 +5,7 @@ from dower_chest import DowerChest
 from main_functions import terminate
 from player_class import Player
 from camera_class import Camera
+from class_enemy import Enemy
 
 pygame.init()
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -26,6 +27,7 @@ def main_game(screen, name_level):
     DowerChest((100, 70), player, all_sprites)
     camera = Camera(screen, start_pos, map_level.width * map_level.tile_size, map_level.height * map_level.tile_size,
                     player.speed)
+    enemy = Enemy(120, 120, map_level, enemy_group)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -40,6 +42,8 @@ def main_game(screen, name_level):
         player_group.draw(screen)
         player_group.update(pygame.key.get_pressed())
         all_sprites.update(pygame.key.get_pressed())
+        enemy_group.update(player)
+        enemy_group.draw(screen)
         pygame.display.flip()
         clock.tick(fps)
 
