@@ -61,6 +61,7 @@ class Player(pygame.sprite.Sprite):
             self.cur_frame = 0
             collide_enemy = pygame.sprite.spritecollideany(self, self.enemy_group)
             if collide_enemy:
+                collide_enemy.hurt_check = True
                 collide_enemy.health -= self.damage_1
                 collide_enemy.time = 25
 
@@ -74,6 +75,7 @@ class Player(pygame.sprite.Sprite):
             self.cur_frame = 0
             collide_enemy = pygame.sprite.spritecollideany(self, self.enemy_group)
             if collide_enemy:
+                collide_enemy.hurt_check = True
                 collide_enemy.health -= self.damage_2
                 collide_enemy.time = 25
 

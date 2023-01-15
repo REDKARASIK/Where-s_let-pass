@@ -20,12 +20,15 @@ class Enemy(pygame.sprite.Sprite):
         self.cut_sheet(self.fight_frames, load_image('zombie_Attack.png', 'white'), 5, 1)
         self.dead_frames = []
         self.cut_sheet(self.dead_frames, load_image('zombie_Dead.png', 'white'), 5, 1)
+        self.hurt_frames = []
+        self.cut_sheet(self.hurt_frames, load_image('zombie_Hurt.png', 'white'), 3, 1)
         self.cur_frame = 0
         self.image = self.idle_frames[self.cur_frame]
         self.rect = self.rect.move(x, y)
         self.transform = False
         self.speed = 7
         self.walk_check = False
+        self.hurt_check = False
         self.attack = False
         self.health = 100
         self.damage = 10
@@ -38,15 +41,6 @@ class Enemy(pygame.sprite.Sprite):
         sheet = pygame.transform.scale(sheet, (int(sheet.get_width() * k), int(sheet.get_height() * k)))
         self.rect = pygame.Rect(0, 0, sheet.get_width() // columns,
                                 sheet.get_height() // rows)
-        # for j in range(rows):
-        #     for i in range(columns):
-        #         frame_location = (self.rect.w * i, self.rect.h * j)
-        #         image = sheet.subsurface(pygame.Rect(frame_location, (self.rect.width, self.rect.height)))
-        #         pixel_rect = image.get_bounding_rect()
-        #         trimmed_surface = pygame.Surface(pixel_rect.size)
-        #         trimmed_surface.blit(image, (0, 0), pixel_rect)
-        #         frames.append(trimmed_surface)
-        #         print(trimmed_surface.get_width())
         for j in range(rows):
             for i in range(columns):
                 frame_location = (self.rect.w * i, self.rect.h * j)
@@ -54,31 +48,31 @@ class Enemy(pygame.sprite.Sprite):
                 frames.append(image)
 
     def update(self, *args):
-        target_x, target_y = self.player.rect.x, self.player.rect.y
-        x, y = self.rect.x, self.rect.y
-        distance = ((target_x - x) ** 2 + (target_y - y) ** 2) ** 0.5
-
-        if not (pygame.sprite.collide_rect(self, self.player)) and distance <= 200 and self.dead:
-            if not self.walk_check:
-                self.cur_frame = 0
-            self.walk_player()
-            self.follow_player(x, y, target_x, target_y)
-        if pygame.sprite.collide_rect(self, self.player) and self.dead and self.time == 0:
-            if not self.attack or self.walk_check:
-                self.cur_frame = 0
-            self.fight_player()
-        if (distance >= 200 and self.dead) or (self.dead and self.time != 0):
-            if self.walk_check or self.attack:
-                self.cur_frame = 0
-            self.idle_enemy()
-        if self.health <= 0:
-            if self.dead:
-                self.cur_frame = 0
-            self.dead_enemy()
-        if self.time > 0:
-            self.time -= 1
-        print(self.health)
-
+        if self.hurt_check and not self.attack:
+            self.hurt()
+        else:
+            target_x, target_y = self.player.rect.x, self.player.rect.y
+            x, y = self.rect.x, self.rect.y
+            distance = ((target_x - x) ** 2 + (target_y - y) ** 2) ** 0.5
+            if not (pygame.sprite.collide_rect(self, self.player)) and distance <= 200 and self.dead:
+                if not self.walk_check:
+                    self.cur_frame = 0
+                self.walk_player()
+                self.follow_player(x, y, target_x, target_y)
+            if pygame.sprite.collide_rect(self, self.player) and self.dead and self.time == 0:
+                if not self.attack or self.walk_check:
+                    self.cur_frame = 0
+                self.fight_player()
+            if (distance >= 200 and self.dead) or (self.dead and self.time != 0):
+                if self.walk_check or self.attack:
+                    self.cur_frame = 0
+                self.idle_enemy()
+            if self.health <= 0:
+                if self.dead:
+                    self.cur_frame = 0
+                self.dead_enemy()
+            if self.time > 0:
+                self.time -= 1
     def follow_player(self, x1, y1, x2, y2):
         coords_of_angles = [(x1, y1), (x1 + self.rect.width, y1), (x1 + self.rect.width, y1 + self.rect.height),
                             (x1, y1 + self.rect.height)]
@@ -151,6 +145,15 @@ class Enemy(pygame.sprite.Sprite):
             self.image = self.dead_frames[self.cur_frame]
             if self.transform:
                 self.image = pygame.transform.flip(self.image, True, False)
+
+    def hurt(self):
+        self.cur_frame = (self.cur_frame + 1) % len(self.hurt_frames)
+        self.image = self.hurt_frames[self.cur_frame]
+        if self.transform:
+            self.image = pygame.transform.flip(self.image, True, False)
+        if not self.cur_frame:
+            self.hurt_check = False
+            self.cur_frame = 0
 
 
 if __name__ == '__main__':
