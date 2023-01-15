@@ -6,6 +6,7 @@ from main_functions import terminate
 from player_class import Player
 from camera_class import Camera
 from class_enemy import Enemy
+from health_class import health
 
 pygame.init()
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -25,6 +26,7 @@ def main_game(screen, name_level):
     player = Player(*start_pos, map_level, enemy_group, player_group)
     player.speed = 35 / fps
     DowerChest((100, 70), player, all_sprites)
+    health((1000, 660), player, screen, all_sprites)
     camera = Camera(screen, start_pos, map_level.width * map_level.tile_size, map_level.height * map_level.tile_size,
                     player.speed)
     enemy = Enemy(120, 120, map_level, player, enemy_group, all_sprites)
