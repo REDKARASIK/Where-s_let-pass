@@ -10,6 +10,7 @@ pygame.init()
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 player_group = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
+enemy_group = pygame.sprite.Group()
 fps = 10
 
 
@@ -20,10 +21,11 @@ def main_game(screen, name_level):
     map_level = Map(name_level,
                     list(map(lambda x: x + 1, free_tiles)), 50)
     start_pos = (50, 340)
-    player = Player(*start_pos, map_level, player_group)
+    player = Player(*start_pos, map_level, enemy_group, player_group)
     player.speed = 35 / fps
     DowerChest((100, 70), player, all_sprites)
-    camera = Camera(screen, start_pos, map_level.width * map_level.tile_size, map_level.height * map_level.tile_size, player.speed)
+    camera = Camera(screen, start_pos, map_level.width * map_level.tile_size, map_level.height * map_level.tile_size,
+                    player.speed)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:

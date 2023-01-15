@@ -50,6 +50,7 @@ class Enemy(pygame.sprite.Sprite):
                 frames.append(image)
 
     def update(self, player):
+        self.player = player
         target_x, target_y = player.rect.x, player.rect.y
         x, y = self.rect.x, self.rect.y
         distance = ((target_x - x) ** 2 + (target_y - y) ** 2) ** 0.5
@@ -99,6 +100,7 @@ class Enemy(pygame.sprite.Sprite):
                 self.rect.y += self.speed
 
     def fight_player(self):
+        self.player.health -= self.damage
         self.image = self.fight_frames[self.cur_frame]
         self.cur_frame = (self.cur_frame + 1) % len(self.fight_frames)
         print(self.cur_frame, 123214214234)
