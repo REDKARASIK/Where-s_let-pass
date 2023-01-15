@@ -8,6 +8,7 @@ all_sprites = pygame.sprite.Group()
 
 
 def settings(screen):
+    pygame.mouse.set_visible(True)
     color = pygame.Color('black')
     color.hsva = (100, 0, 100, 100)
     image = pygame.Surface((screen.get_width(), screen.get_height()))
@@ -25,10 +26,12 @@ def settings(screen):
             all_sprites.update(event)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
+                    pygame.mouse.set_visible(False)
                     return
             if exit.click(event):
                 terminate()
             if continuing.click(event):
+                pygame.mouse.set_visible(False)
                 return
         all_sprites.draw(screen)
         pygame.display.flip()
