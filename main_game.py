@@ -28,7 +28,7 @@ def main_game(screen, name_level):
     start_pos = (50, 400)
     player = Player(*start_pos, map_level, enemy_group, player_group)
     player.speed_1 = 35 / fps
-    player.speed_2 = 50 / fps
+    player.speed_2 = player.speed_1 * 2
     DowerChest((100, 70), screen, player, all_sprites)
     Health((1300, 800), player, screen, player_stats)
     Stamina((1300, 820), player, screen, player_stats)
