@@ -26,7 +26,7 @@ class DowerChest(pygame.sprite.Sprite):
         super().__init__(*group)
         self.player = player
         self.screen = screen
-        self.items = ["medicine chest", "money chest", ""]
+        self.items = ["medicine chest", "stamina chest"]
         self.image = DowerChest.imageclosed
         self.item = random.choice(self.items)
         self.rect = self.image.get_rect()
@@ -42,9 +42,14 @@ class DowerChest(pygame.sprite.Sprite):
         if pygame.sprite.collide_rect(self, self.player) and args[0][
             pygame.K_e] and self.image == DowerChest.imageclosed:
             self.image = DowerChest.imageopen
-            self.player.health += 20
-            if self.player.health > 100:
-                self.player.health = 100
+            if self.item == "medicine chest":
+                self.player.health += 20
+                if self.player.health > 100:
+                    self.player.health = 100
+            else:
+                self.player.stamina += 20
+                if self.player.stamina > 100:
+                    self.player.stamina = 100
 
 
 if __name__ == '__main__':
