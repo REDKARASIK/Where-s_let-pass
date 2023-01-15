@@ -116,7 +116,6 @@ class Enemy(pygame.sprite.Sprite):
     def fight_player(self):
         self.image = self.fight_frames[self.cur_frame]
         self.cur_frame = (self.cur_frame + 1) % len(self.fight_frames)
-        print(self.cur_frame, 123214214234)
         if self.transform:
             self.image = pygame.transform.flip(self.image, True, False)
         if self.cur_frame == 0:
