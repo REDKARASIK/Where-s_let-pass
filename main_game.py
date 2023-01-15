@@ -19,7 +19,7 @@ def main_game(screen, name_level):
                   62, 63, 70, 71, 72, 73, 79]
     map_level = Map(name_level,
                     list(map(lambda x: x + 1, free_tiles)), 50)
-    start_pos = (50, 400)
+    start_pos = (50, 340)
     player = Player(*start_pos, map_level, player_group)
     player.speed = 35 / fps
     DowerChest((100, 70), player, all_sprites)

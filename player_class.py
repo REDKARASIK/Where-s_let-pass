@@ -14,11 +14,15 @@ class Player(pygame.sprite.Sprite):
         super().__init__(*groups)
         self.map_check = level
         self.idle_frames = []
-        self.cut_sheet(self.idle_frames, load_image('Man_idle.png', 'white'), 4, 1)
+        self.cut_sheet(self.idle_frames, load_image('main_idle.png'), 7, 1)
         self.walk_frames = []
-        self.cut_sheet(self.walk_frames, load_image('Man_walk.png', 'white'), 6, 1)
+        self.cut_sheet(self.walk_frames, load_image('main_walk.png'), 7, 1)
         self.fight_frames = []
-        self.cut_sheet(self.fight_frames, load_image('Man_attack.png', 'white'), 4, 1)
+        self.cut_sheet(self.fight_frames, load_image('main_attack1.png'), 10, 1)
+        self.fight_frames.append(self.fight_frames[-1])
+        self.fight_frames_2 = []
+        self.cut_sheet(self.fight_frames_2, load_image('main_attack_2.png'), 4, 1)
+        self.fight_frames_2.append(self.fight_frames_2[-1])
         self.cur_frame = 0
         self.image = self.idle_frames[self.cur_frame]
         self.rect = self.rect.move(x, y)
@@ -26,20 +30,20 @@ class Player(pygame.sprite.Sprite):
         self.speed = 10
         self.walk_check = False
         self.attack = False
+        self.attack_2 = False
 
     def cut_sheet(self, frames, sheet, columns, rows):
-        sheet = pygame.transform.scale(sheet, (sheet.get_width() * 1.5, sheet.get_height() * 1.5))
         self.rect = pygame.Rect(0, 0, sheet.get_width() // columns,
                                 sheet.get_height() // rows)
         for j in range(rows):
             for i in range(columns):
                 frame_location = (self.rect.w * i, self.rect.h * j)
                 frames.append(sheet.subsurface(pygame.Rect(
-                    frame_location, (22 * 1.5, self.rect.height))))
+                    frame_location, (self.rect.width, self.rect.height))))
 
     def update(self, *args):
-        k = 22 * 1.5
-        if args[0][pygame.K_f]:
+        k = self.rect.width
+        if args[0][pygame.K_f] and not self.attack_2:
             self.cur_frame = 0
             self.attack = True
             self.walk_check = False
@@ -51,12 +55,24 @@ class Player(pygame.sprite.Sprite):
             if not self.cur_frame:
                 self.attack = False
                 self.cur_frame = 0
+        if args[0][pygame.K_g] and not self.attack:
+            self.cur_frame = 0
+            self.attack_2 = True
+            self.walk_check = False
+        if self.attack_2:
+            self.image = self.fight_frames_2[self.cur_frame]
+            self.cur_frame = (self.cur_frame + 1) % len(self.fight_frames_2)
+            if self.transform:
+                self.image = pygame.transform.flip(self.image, True, False)
+            if not self.cur_frame:
+                self.attack_2 = False
+                self.cur_frame = 0
         if self.walk_check:
             self.cur_frame = (self.cur_frame + 1) % len(self.walk_frames)
             self.image = self.walk_frames[self.cur_frame]
             if self.transform:
                 self.image = pygame.transform.flip(self.image, True, False)
-        if not self.attack:
+        if not self.attack and not self.attack_2:
             if args[0][pygame.K_d]:
                 if self.map_check.is_free(((self.rect.x + self.speed + -self.map_check.dx) // self.map_check.tile_size,
                                            (self.rect.y + -self.map_check.dy) // self.map_check.height)) and \
