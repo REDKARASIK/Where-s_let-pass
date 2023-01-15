@@ -16,17 +16,17 @@ class Player(pygame.sprite.Sprite):
         self.enemy_group = enemy_group
         self.map_check = level
         self.idle_frames = []
-        self.cut_sheet(self.idle_frames, load_image('main_idle.png'), 7, 1)
+        self.cut_sheet(self.idle_frames, load_image('Idle.png', 'white'), 7, 1)
         self.walk_frames = []
-        self.cut_sheet(self.walk_frames, load_image('main_walk.png'), 7, 1)
+        self.cut_sheet(self.walk_frames, load_image('Walk.png', 'white'), 6, 1)
         self.fight_frames = []
-        self.cut_sheet(self.fight_frames, load_image('main_attack1.png'), 10, 1)
+        self.cut_sheet(self.fight_frames, load_image('Attack_1.png', 'white'), 4, 1)
         self.fight_frames.append(self.fight_frames[-1])
         self.fight_frames_2 = []
-        self.cut_sheet(self.fight_frames_2, load_image('main_attack_2.png'), 4, 1)
+        self.cut_sheet(self.fight_frames_2, load_image('Attack_2.png', 'white'), 4, 1)
         self.fight_frames_2.append(self.fight_frames_2[-1])
         self.hurt_frames = []
-        self.cut_sheet(self.hurt_frames, load_image('main_hurt.png', 'white'), 3, 1)
+        self.cut_sheet(self.hurt_frames, load_image('Hurt.png', 'white'), 3, 1)
         self.cur_frame = 0
         self.image = self.idle_frames[self.cur_frame]
         self.rect = self.rect.move(x, y)
@@ -41,7 +41,7 @@ class Player(pygame.sprite.Sprite):
         self.hurt_check = False
 
     def cut_sheet(self, frames, sheet, columns, rows):
-        k = 0.8
+        k = 0.9
         sheet = pygame.transform.scale(sheet, (int(sheet.get_width() * k), int(sheet.get_height() * k)))
         self.rect = pygame.Rect(0, 0, sheet.get_width() // columns,
                                 sheet.get_height() // rows)
