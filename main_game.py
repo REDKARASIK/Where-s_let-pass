@@ -7,7 +7,7 @@ from player_class import Player
 from camera_class import Camera
 from class_enemy import Enemy
 from class_finish import Finish
-from health_class import health
+from health_and_stamina_class import Health, Stamina
 from settup import settings
 
 pygame.init()
@@ -28,8 +28,9 @@ def main_game(screen, name_level):
     start_pos = (50, 400)
     player = Player(*start_pos, map_level, enemy_group, player_group)
     player.speed = 35 / fps
-    DowerChest((100, 70), player, all_sprites)
-    health((1300, 800), player, screen, player_stats)
+    DowerChest((100, 70), screen, player, all_sprites)
+    Health((1300, 800), player, screen, player_stats)
+    Stamina((1300, 820), player, screen, player_stats)
     camera = Camera(screen, start_pos, map_level.width * map_level.tile_size, map_level.height * map_level.tile_size,
                     player.speed)
     enemy = Enemy(120, 120, map_level, player, enemy_group, all_sprites)
@@ -45,10 +46,10 @@ def main_game(screen, name_level):
         for sprite in all_sprites:
             camera.apply(sprite)
         all_sprites.draw(screen)
+        all_sprites.update(pygame.key.get_pressed())
         player_group.draw(screen)
         player_stats.draw(screen)
         player_group.update(pygame.key.get_pressed())
-        all_sprites.update(pygame.key.get_pressed())
         player_stats.update()
         if finish.is_finish():
             print('FINISH')

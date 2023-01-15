@@ -40,6 +40,9 @@ class Player(pygame.sprite.Sprite):
         self.health = 100
         self.hurt_check = False
         self.mask = pygame.mask.from_surface(self.image)
+        self.stamina = 100
+        self.stamina_up = 0
+        self.stamina_up_time = 20
 
     def cut_sheet(self, frames, sheet, columns, rows):
         k = 0.9
@@ -90,18 +93,28 @@ class Player(pygame.sprite.Sprite):
             self.cur_frame = 0
 
     def update(self, *args):
+        self.stamina_up = (self.stamina_up + 1) % self.stamina_up_time
+        print(self.stamina_up)
+        if self.stamina_up == 0:
+            self.stamina += 10
+            if self.stamina > 100:
+                self.stamina = 100
         if self.hurt_check and not self.attack and not self.attack_2:
             self.hurt()
         else:
             k = 45
-            if args[0][pygame.K_f] and not self.attack_2 and not self.attack:
+            if args[0][pygame.K_f] and not self.attack_2 and not self.attack and self.stamina >= 10:
+                self.stamina -= 10
+                self.stamina_up = 0
                 self.cur_frame = 0
                 self.attack = True
                 self.walk_check = False
             if self.attack:
                 self.attack_1()
-            if args[0][pygame.K_g] and not self.attack and not self.attack_2:
+            if args[0][pygame.K_g] and not self.attack and not self.attack_2 and self.stamina >= 25:
+                self.stamina -= 25
                 self.cur_frame = 0
+                self.stamina_up = 0
                 self.attack_2 = True
                 self.walk_check = False
             if self.attack_2:
