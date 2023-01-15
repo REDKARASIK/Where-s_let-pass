@@ -34,7 +34,6 @@ class Finish(pygame.sprite.Sprite):
         sprite.rect = image.get_rect()
         sprite.rect.x = self.player.rect.x + 40
         sprite.rect.y = self.player.rect.y
-        print(sprite, sprite.rect)
         if pygame.sprite.collide_rect(self, sprite):
             return 1
 
