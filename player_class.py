@@ -106,12 +106,12 @@ class Player(pygame.sprite.Sprite):
                 if self.map_check.is_free(((self.rect.x - self.speed + -self.map_check.dx + k) // self.map_check.tile_size,
                                            (self.rect.y + -self.map_check.dy) // self.map_check.height)) and \
                         self.map_check.is_free(((self.rect.x + self.rect.width - self.speed - k + -self.map_check.dx)
-                                                // self.map_check.height,
+                                                // self.map_check.tile_size,
                                                 (self.rect.y + self.rect.height + -self.map_check.dy)
-                                                // self.map_check.tile_size)) and \
+                                                // self.map_check.height)) and \
                         self.map_check.is_free(((self.rect.x + self.rect.width - self.speed - k + -self.map_check.dx)
-                                                // self.map_check.height,
-                                                (self.rect.y + -self.map_check.dy) // self.map_check.tile_size)) and \
+                                                // self.map_check.tile_size,
+                                                (self.rect.y + -self.map_check.dy) // self.map_check.height)) and \
                         self.map_check.is_free(((self.rect.x - self.speed + -self.map_check.dx + k)
                                                 // self.map_check.tile_size,
                                                 (self.rect.y + self.rect.height + -self.map_check.dy)
