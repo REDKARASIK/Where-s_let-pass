@@ -11,6 +11,7 @@ def settings(screen):
     color = pygame.Color('black')
     color.hsva = (100, 0, 100, 100)
     image = pygame.Surface((screen.get_width(), screen.get_height()))
+    image.set_alpha(150)
     pygame.draw.rect(image, color, (0, 0, screen.get_width(), screen.get_width()))
     screen.blit(image, (0, 0))
     exit = Button('Выйти из игры', 0, 0, all_sprites)
