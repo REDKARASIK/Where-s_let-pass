@@ -18,6 +18,7 @@ class Map:
         self.finish_tile = finish_tile
         self.dx = 0
         self.dy = 0
+        self.finish_id = 75
 
     def render(self, screen, dx=0, dy=0):
         self.dx += dx
