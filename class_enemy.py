@@ -120,6 +120,9 @@ class Enemy(pygame.sprite.Sprite):
             self.image = pygame.transform.flip(self.image, True, False)
         if self.cur_frame == 0:
             self.player.health -= self.damage
+            self.player.hurt_check = True
+            if not (self.player.attack or self.player.attack_2):
+                self.player.cur_frame = 0
             self.time = 25
             self.attack = False
         self.attack = True
