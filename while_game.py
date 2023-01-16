@@ -8,7 +8,7 @@ c = 0
 if c == 0:
     c = start_screen(screen, c)
 if c == 1:
-    main_game(screen, 'project_of_map.tmx')
+    main_game(screen, 'first_level.tmx')
 if c == 2:
     # start level
     pass

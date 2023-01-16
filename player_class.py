@@ -105,7 +105,6 @@ class Player(pygame.sprite.Sprite):
 
     def update(self, *args):
         self.stamina_up = (self.stamina_up + 1) % self.stamina_up_time
-        print(self.stamina_up)
         if self.stamina_up == 0:
             self.stamina += 10
             if self.stamina > 100:

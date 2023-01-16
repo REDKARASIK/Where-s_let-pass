@@ -34,6 +34,7 @@ def main_game(screen, name_level):
     Stamina((1300, 820), player, screen, player_stats)
     camera = Camera(screen, start_pos, map_level.width * map_level.tile_size, map_level.height * map_level.tile_size,
                     player.speed)
+    print(camera.map_h, camera.map_w, map_level.width, map_level.height, map_level.tile_size)
     Enemy(120, 120, map_level, player, enemy_group, all_sprites)
     finish = Finish((1845, 75), player, all_sprites)
     while True:
@@ -60,4 +61,4 @@ def main_game(screen, name_level):
 
 
 if __name__ == '__main__':
-    main_game(screen, 'project_of_map.tmx')
+    main_game(screen, 'first_level.tmx')
