@@ -113,7 +113,7 @@ class Player(pygame.sprite.Sprite):
             self.hurt()
         else:
             k = 45
-            if args[0][pygame.K_f] and not self.attack_2 and not self.attack and self.stamina >= 10:
+            if (args[0][pygame.K_f] or args[1][0]) and not self.attack_2 and not self.attack and self.stamina >= 10:
                 self.stamina -= 10
                 self.stamina_up = 0
                 self.cur_frame = 0
@@ -121,7 +121,7 @@ class Player(pygame.sprite.Sprite):
                 self.walk_check = False
             if self.attack:
                 self.attack_1()
-            if args[0][pygame.K_g] and not self.attack and not self.attack_2 and self.stamina >= 25:
+            if (args[0][pygame.K_g] or args[1][2]) and not self.attack and not self.attack_2 and self.stamina >= 25:
                 self.stamina -= 25
                 self.cur_frame = 0
                 self.stamina_up = 0

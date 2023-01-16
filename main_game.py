@@ -20,6 +20,7 @@ fps = 10
 
 
 def main_game(screen, name_level):
+    pygame.mouse.set_visible(False)
     clock = pygame.time.Clock()
     free_tiles = [6, 7, 8, 9, 16, 17, 18, 19, 26, 27, 28, 29, 11, 12, 13, 14, 21, 22, 23, 24, 31, 32, 33, 34, 60, 61,
                   62, 63, 70, 71, 72, 73, 79]
@@ -28,7 +29,7 @@ def main_game(screen, name_level):
     start_pos = (50, 400)
     player = Player(*start_pos, map_level, enemy_group, player_group)
     player.speed_1 = 35 / fps
-    player.speed_2 = 50 / fps
+    player.speed_2 = player.speed_1 * 2
     DowerChest((100, 70), screen, player, all_sprites)
     Health((1300, 800), player, screen, player_stats)
     Stamina((1300, 820), player, screen, player_stats)
@@ -51,7 +52,7 @@ def main_game(screen, name_level):
         all_sprites.update(pygame.key.get_pressed())
         player_group.draw(screen)
         player_stats.draw(screen)
-        player_group.update(pygame.key.get_pressed())
+        player_group.update(pygame.key.get_pressed(), pygame.mouse.get_pressed())
         player_stats.update()
         if finish.is_finish():
             print('FINISH')
