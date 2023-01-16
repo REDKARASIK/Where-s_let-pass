@@ -26,7 +26,7 @@ def main_game(screen, name_level):
                   62, 63, 70, 71, 72, 73, 79]
     map_level = Map(name_level,
                     list(map(lambda x: x + 1, free_tiles)), 50)
-    start_pos = (50, 400)
+    start_pos = (50, 800)
     player = Player(*start_pos, map_level, enemy_group, player_group)
     player.speed_1 = 35 / fps
     player.speed_2 = player.speed_1 * 2
@@ -35,7 +35,8 @@ def main_game(screen, name_level):
     Stamina((1300, 820), player, screen, player_stats)
     camera = Camera(screen, start_pos, map_level.width * map_level.tile_size, map_level.height * map_level.tile_size,
                     player.speed)
-    print(camera.map_h, camera.map_w, map_level.width, map_level.height, map_level.tile_size)
+    print(camera.map_w, camera.map_h, map_level.width, map_level.height, map_level.tile_size)
+    print(120 * 32, 64 * 32)
     Enemy(120, 120, map_level, player, enemy_group, all_sprites)
     finish = Finish((1845, 75), player, all_sprites)
     while True:

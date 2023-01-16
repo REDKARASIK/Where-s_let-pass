@@ -5,7 +5,6 @@ from main_functions import terminate
 pygame.init()
 
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-print(screen.get_size())
 
 
 class Map:
@@ -38,7 +37,7 @@ class Map:
 
 
 if __name__ == "__main__":
-    maps = Map('project_of_map.tmx', 0, 0)
+    maps = Map('first_level.tmx', 0, 0)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
