@@ -53,7 +53,7 @@ def main_game(screen, name_level):
         all_sprites.update(pygame.key.get_pressed())
         player_group.draw(screen)
         player_stats.draw(screen)
-        player_group.update(pygame.key.get_pressed(), pygame.mouse.get_pressed())
+        player_group.update(pygame.key.get_pressed())
         player_stats.update()
         if finish.is_finish():
             print('FINISH')
