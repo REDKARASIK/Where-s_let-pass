@@ -9,7 +9,7 @@ from class_enemy import Enemy
 from class_finish import Finish
 from health_and_stamina_class import Health, Stamina
 from settup import settings
-from inventary_class import Inventory
+from inventory_class import Inventory
 
 pygame.init()
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
