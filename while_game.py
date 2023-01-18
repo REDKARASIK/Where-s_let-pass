@@ -9,7 +9,7 @@ while True:
         c = start_screen(screen, c)
     if c == 1:
         screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-        c = main_game(screen, 'project_of_map.tmx')
+        c = main_game(screen, 'first_level.tmx')
     if c == 2:
         # start level
         pass
