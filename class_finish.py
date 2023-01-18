@@ -11,7 +11,7 @@ pygame.init()
 size = width, height = 500, 500
 screen = pygame.display.set_mode(size)
 all_sprites = pygame.sprite.Group()
-maps = Map('project_of_map.tmx', [7], 1)
+maps = Map('project_of_map.tmx', [7], 1, 1)
 players = Player(50, 50, maps, all_sprites)
 player_sprites = pygame.sprite.Group()
 player_sprites.add(players)

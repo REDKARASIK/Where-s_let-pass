@@ -22,23 +22,22 @@ fps = 10
 def main_game(screen, name_level):
     pygame.mouse.set_visible(False)
     clock = pygame.time.Clock()
-    free_tiles = [6, 7, 8, 9, 16, 17, 18, 19, 26, 27, 28, 29, 11, 12, 13, 14, 21, 22, 23, 24, 31, 32, 33, 34, 60, 61,
+    borders = [0, 1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40, 41, 42, 43, 44, 45, 50, 51, 52, 53, 54, 55, 78]
+    free_tiles = [6, 7, 8, 9, 11, 12, 13, 14, 16, 17, 18, 19, 21, 22, 23, 24, 26, 27, 28, 29, 31, 32, 33, 34, 60, 61,
                   62, 63, 70, 71, 72, 73, 79]
-    map_level = Map(name_level,
-                    list(map(lambda x: x + 1, free_tiles)), 50)
-    start_pos = (50, 800)
+    map_level = Map(name_level, list(map(lambda x: x + 1, free_tiles)), list(map(lambda x: x + 1, borders)), 0)
+    start_pos = (80, 800)
     player = Player(*start_pos, map_level, enemy_group, player_group)
-    player.speed_1 = 35 / fps
+    player.speed_1 = 35 / fps * 6
     player.speed_2 = player.speed_1 * 2
     DowerChest((100, 70), screen, player, all_sprites)
     Health((1300, 800), player, screen, player_stats)
     Stamina((1300, 820), player, screen, player_stats)
     camera = Camera(screen, start_pos, map_level.width * map_level.tile_size, map_level.height * map_level.tile_size,
                     player.speed)
-    print(camera.map_w, camera.map_h, map_level.width, map_level.height, map_level.tile_size)
-    print(120 * 32, 64 * 32)
     Enemy(120, 120, map_level, player, enemy_group, all_sprites)
     finish = Finish((1845, 75), player, all_sprites)
+    map_level.render()
     while True:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -46,7 +45,8 @@ def main_game(screen, name_level):
                     settings(screen)
         screen.fill('black')
         camera.update(player)
-        map_level.render(screen, *camera.apply())
+        map_level.render(*camera.apply())
+        map_level.borderlines.draw(screen)
         for sprite in all_sprites:
             camera.apply(sprite)
         all_sprites.draw(screen)
@@ -63,4 +63,4 @@ def main_game(screen, name_level):
 
 
 if __name__ == '__main__':
-    main_game(screen, 'first_level.tmx')
+    main_game(screen, 'project_of_map.tmx')

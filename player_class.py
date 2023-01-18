@@ -143,76 +143,37 @@ class Player(pygame.sprite.Sprite):
                     self.speed = self.speed_2
                 else:
                     self.speed = self.speed_1
+                self.mask = pygame.mask.from_surface(self.image)
                 if args[0][pygame.K_d]:
-                    if self.map_check.is_free(
-                            ((self.rect.x + self.speed + -self.map_check.dx + k) // self.map_check.tile_size,
-                             (self.rect.y + -self.map_check.dy) // self.map_check.height)) and \
-                            self.map_check.is_free(
-                                ((self.rect.x + self.rect.width + self.speed - k + -self.map_check.dx)
-                                 // self.map_check.tile_size,
-                                 (self.rect.y + self.rect.height + -self.map_check.dy)
-                                 // self.map_check.height)) and \
-                            self.map_check.is_free(
-                                ((self.rect.x + self.rect.width + self.speed - k + -self.map_check.dx)
-                                 // self.map_check.tile_size,
-                                 (self.rect.y + -self.map_check.dy) // self.map_check.height)) and \
-                            self.map_check.is_free(((self.rect.x + self.speed + -self.map_check.dx + k)
-                                                    // self.map_check.tile_size,
-                                                    (self.rect.y + self.rect.height + -self.map_check.dy)
-                                                    // self.map_check.height)):
-                        self.rect.x += self.speed
+                    self.rect.x += self.speed
+                    collide_border = pygame.sprite.spritecollide(self, self.map_check.borderlines, False)
+                    for obj in collide_border:
+                        if pygame.sprite.collide_mask(self, obj) and obj.wall:
+                            self.rect.x -= self.speed
+                            break
                         self.transform = False
                 if args[0][pygame.K_a]:
-                    if self.map_check.is_free(
-                            ((self.rect.x - self.speed + -self.map_check.dx + k) // self.map_check.tile_size,
-                             (self.rect.y + -self.map_check.dy) // self.map_check.height)) and \
-                            self.map_check.is_free(
-                                ((self.rect.x + self.rect.width - self.speed - k + -self.map_check.dx)
-                                 // self.map_check.tile_size,
-                                 (self.rect.y + self.rect.height + -self.map_check.dy)
-                                 // self.map_check.height)) and \
-                            self.map_check.is_free(
-                                ((self.rect.x + self.rect.width - self.speed - k + -self.map_check.dx)
-                                 // self.map_check.tile_size,
-                                 (self.rect.y + -self.map_check.dy) // self.map_check.height)) and \
-                            self.map_check.is_free(((self.rect.x - self.speed + -self.map_check.dx + k)
-                                                    // self.map_check.tile_size,
-                                                    (self.rect.y + self.rect.height + -self.map_check.dy)
-                                                    // self.map_check.height)):
+                    self.rect.x -= self.speed
+                    collide_border = pygame.sprite.spritecollide(self, self.map_check.borderlines, False)
+                    for obj in collide_border:
+                        if pygame.sprite.collide_mask(self, obj) and obj.wall:
+                            self.rect.x += self.speed
+                            break
                         self.transform = True
-                        self.rect.x -= self.speed
                 if args[0][pygame.K_s]:
-                    if self.map_check.is_free(((self.rect.x + -self.map_check.dx + k) // self.map_check.tile_size,
-                                               (
-                                                       self.rect.y + self.speed + -self.map_check.dy)
-                                               // self.map_check.height)) and \
-                            self.map_check.is_free(((self.rect.x + self.rect.width - k + -self.map_check.dx)
-                                                    // self.map_check.tile_size,
-                                                    (self.rect.y + self.rect.height + self.speed + -self.map_check.dy)
-                                                    // self.map_check.height)) and \
-                            self.map_check.is_free(((self.rect.x + self.rect.width - k + -self.map_check.dx)
-                                                    // self.map_check.tile_size,
-                                                    (self.rect.y + self.speed + -self.map_check.dy)
-                                                    // self.map_check.height)) and \
-                            self.map_check.is_free(((self.rect.x + -self.map_check.dx + k) // self.map_check.tile_size,
-                                                    (self.rect.y + self.rect.height + self.speed + -self.map_check.dy)
-                                                    // self.map_check.height)):
-                        self.rect.y += self.speed
+                    self.rect.y += self.speed
+                    collide_border = pygame.sprite.spritecollide(self, self.map_check.borderlines, False)
+                    for obj in collide_border:
+                        if pygame.sprite.collide_mask(self, obj) and obj.wall:
+                            self.rect.y -= self.speed
+                            break
                 if args[0][pygame.K_w]:
-                    if self.map_check.is_free(((self.rect.x + -self.map_check.dx + k) // self.map_check.tile_size,
-                                               (
-                                                       self.rect.y - self.speed + -self.map_check.dy) // self.map_check.height)) and \
-                            self.map_check.is_free(
-                                ((self.rect.x + self.rect.width - k + -self.map_check.dx) // self.map_check.tile_size,
-                                 (
-                                         self.rect.y + self.rect.height - self.speed + -self.map_check.dy) // self.map_check.height)) and \
-                            self.map_check.is_free(
-                                ((self.rect.x + self.rect.width - k + -self.map_check.dx) // self.map_check.tile_size,
-                                 (self.rect.y - self.speed + -self.map_check.dy) // self.map_check.height)) and \
-                            self.map_check.is_free(((self.rect.x + -self.map_check.dx + k) // self.map_check.tile_size,
-                                                    (((
-                                                              self.rect.y + -self.map_check.dy) + self.rect.height) - self.speed) // self.map_check.height)):
-                        self.rect.y -= self.speed
+                    self.rect.y -= self.speed
+                    collide_border = pygame.sprite.spritecollide(self, self.map_check.borderlines, False)
+                    for obj in collide_border:
+                        if pygame.sprite.collide_mask(self, obj) and obj.wall:
+                            self.rect.y += self.speed
+                            break
                 if not (args[0][pygame.K_w] or args[0][pygame.K_s] or args[0][pygame.K_a] or args[0][pygame.K_d]):
                     if self.walk_check or self.run_check:
                         self.cur_frame = 0
@@ -235,19 +196,19 @@ class Player(pygame.sprite.Sprite):
 
 if __name__ == '__main__':
     clock = pygame.time.Clock()
-    map_level = Map('project_of_map.tmx',
-                    list(map(lambda x: x + 1,
-                             [6, 7, 8, 9, 16, 17, 18, 19, 26, 27, 28, 29, 60, 61, 62, 63, 70, 71, 72, 73, 11, 12, 13,
-                              14, 21, 22,
-                              23, 24, 31, 32, 33, 34, 41, 43])), 50)
+    borders = [0, 1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40, 41, 42, 43, 44, 45, 50, 51, 52, 53, 54, 55, 78]
+    free_tiles = [6, 7, 8, 9, 16, 17, 18, 19, 26, 27, 28, 29, 11, 12, 13, 14, 21, 22, 23, 24, 31, 32, 33, 34, 60, 61,
+                  62, 63, 70, 71, 72, 73, 79]
+    map_level = Map('first_level.tmx', list(map(lambda x: x + 1, free_tiles)), list(map(lambda x: x + 1, borders)), 0)
     player = Player(64, 64, map_level, enemy_group, all_sprites)
+    map_level.render(screen)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     terminate()
         screen.fill('black')
-        map_level.render(screen)
+        map_level.borderlines.draw(screen)
         all_sprites.draw(screen)
         all_sprites.update(pygame.key.get_pressed())
         pygame.display.flip()

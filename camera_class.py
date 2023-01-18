@@ -5,8 +5,8 @@ pygame.init()
 
 class Camera:
     def __init__(self, screen, start_pos, map_width, map_height, speed):
-        self.map_w = map_width - screen.get_width() + 1100
-        self.map_h = map_height - screen.get_height()
+        self.map_w = map_width + screen.get_width()
+        self.map_h = map_height + screen.get_height()
         self.w = 0
         self.h = 0
         self.dx = 0
