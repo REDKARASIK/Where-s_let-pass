@@ -9,6 +9,7 @@ from class_enemy import Enemy
 from class_finish import Finish
 from health_and_stamina_class import Health, Stamina
 from settup import settings
+from inventary_class import Inventory
 
 pygame.init()
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -16,6 +17,7 @@ player_group = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 enemy_group = pygame.sprite.Group()
 player_stats = pygame.sprite.Group()
+inventory_group = pygame.sprite.Group()
 fps = 10
 
 
@@ -38,12 +40,16 @@ def main_game(screen, name_level):
     print(camera.map_w, camera.map_h, map_level.width, map_level.height, map_level.tile_size)
     print(120 * 32, 64 * 32)
     Enemy(120, 120, map_level, player, enemy_group, all_sprites)
+    inventory = Inventory(screen, player, screen.get_width() // 2, 0, inventory_group)
     finish = Finish((1845, 75), player, all_sprites)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     settings(screen)
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_i:
+                        inventory_group.update()
         screen.fill('black')
         camera.update(player)
         map_level.render(screen, *camera.apply())
@@ -55,6 +61,8 @@ def main_game(screen, name_level):
         player_stats.draw(screen)
         player_group.update(pygame.key.get_pressed())
         player_stats.update()
+        if inventory.open_check:
+            inventory_group.draw(screen)
         if finish.is_finish():
             print('FINISH')
             exit()
