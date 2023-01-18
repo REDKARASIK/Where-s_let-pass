@@ -13,11 +13,14 @@ class Health(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = pos[0]
         self.rect.y = pos[1]
+        self.font = pygame.font.Font(None, 20)
 
     def update(self, *args):
         self.image.fill('black')
         pygame.draw.rect(self.image, 'red', (0, 0, self.player.health // 10 * 16, self.image.get_height()))
         pygame.draw.rect(self.image, 'darkblue', (0, 0, self.image.get_width(), self.image.get_height()), 2)
+        self.screen.blit(self.font.render(str(self.player.health) + '%', True, 'white'),
+                         (self.rect.x + self.image.get_width() + 10, self.rect.y))
 
 
 class Stamina(pygame.sprite.Sprite):
@@ -31,8 +34,11 @@ class Stamina(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = pos[0]
         self.rect.y = pos[1]
+        self.font = pygame.font.Font(None, 20)
 
     def update(self, *args):
         self.image.fill('black')
         pygame.draw.rect(self.image, 'blue', (0, 0, self.player.stamina // 10 * 16, self.image.get_height()))
         pygame.draw.rect(self.image, 'darkblue', (0, 0, self.image.get_width(), self.image.get_height()), 2)
+        self.screen.blit(self.font.render(str(self.player.stamina) + '%', True, 'white'),
+                         (self.rect.x + self.image.get_width() + 10, self.rect.y))

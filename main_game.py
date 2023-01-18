@@ -9,6 +9,7 @@ from class_enemy import Enemy
 from class_finish import Finish
 from health_and_stamina_class import Health, Stamina
 from settup import settings
+from inventory_class import Inventory
 from dead_class import dead
 
 pygame.init()
@@ -17,6 +18,7 @@ player_group = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 enemy_group = pygame.sprite.Group()
 player_stats = pygame.sprite.Group()
+inventory_group = pygame.sprite.Group()
 fps = 10
 
 
@@ -27,7 +29,7 @@ def main_game(screen, name_level):
                   62, 63, 70, 71, 72, 73, 79]
     map_level = Map(name_level,
                     list(map(lambda x: x + 1, free_tiles)), 50)
-    start_pos = (50, 400)
+    start_pos = (50, 800)
     player = Player(*start_pos, map_level, enemy_group, player_group)
     player.speed_1 = 35 / fps
     player.speed_2 = player.speed_1 * 2
@@ -39,12 +41,16 @@ def main_game(screen, name_level):
     print(camera.map_w, camera.map_h, map_level.width, map_level.height, map_level.tile_size)
     print(120 * 32, 64 * 32)
     Enemy(120, 120, map_level, player, enemy_group, all_sprites)
+    inventory = Inventory(screen, player, screen.get_width() // 2, 0, inventory_group)
     finish = Finish((1845, 75), player, all_sprites)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     settings(screen)
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_i:
+                        inventory_group.update()
         screen.fill('black')
         camera.update(player)
         map_level.render(screen, *camera.apply())
@@ -62,6 +68,8 @@ def main_game(screen, name_level):
                 x.kill()
             return dead(screen)
         player_stats.update()
+        if inventory.open_check:
+            inventory_group.draw(screen)
         if finish.is_finish():
             print('FINISH')
             exit()
@@ -70,4 +78,4 @@ def main_game(screen, name_level):
 
 
 if __name__ == '__main__':
-    main_game(screen, 'project_of_map.tmx')
+    main_game(screen, 'first_level.tmx')
