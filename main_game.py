@@ -9,6 +9,7 @@ from class_enemy import Enemy
 from class_finish import Finish
 from health_and_stamina_class import Health, Stamina
 from settup import settings
+from dead_class import dead
 
 pygame.init()
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -26,7 +27,7 @@ def main_game(screen, name_level):
                   62, 63, 70, 71, 72, 73, 79]
     map_level = Map(name_level,
                     list(map(lambda x: x + 1, free_tiles)), 50)
-    start_pos = (50, 800)
+    start_pos = (50, 400)
     player = Player(*start_pos, map_level, enemy_group, player_group)
     player.speed_1 = 35 / fps
     player.speed_2 = player.speed_1 * 2
@@ -54,6 +55,12 @@ def main_game(screen, name_level):
         player_group.draw(screen)
         player_stats.draw(screen)
         player_group.update(pygame.key.get_pressed())
+        if player.deads:
+            for x in all_sprites:
+                x.kill()
+            for x in player_group:
+                x.kill()
+            return dead(screen)
         player_stats.update()
         if finish.is_finish():
             print('FINISH')
@@ -63,4 +70,4 @@ def main_game(screen, name_level):
 
 
 if __name__ == '__main__':
-    main_game(screen, 'first_level.tmx')
+    main_game(screen, 'project_of_map.tmx')
