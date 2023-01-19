@@ -10,6 +10,7 @@ from class_finish import Finish
 from health_and_stamina_class import Health, Stamina
 from settup import settings
 from inventory_class import Inventory
+from dead_class import dead
 
 pygame.init()
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -60,6 +61,12 @@ def main_game(screen, name_level):
         player_group.draw(screen)
         player_stats.draw(screen)
         player_group.update(pygame.key.get_pressed())
+        if player.deads:
+            for x in all_sprites:
+                x.kill()
+            for x in player_group:
+                x.kill()
+            return dead(screen)
         player_stats.update()
         if inventory.open_check:
             inventory_group.update(pygame.mouse.get_pressed(), pygame.mouse.get_pos())
