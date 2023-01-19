@@ -1,6 +1,7 @@
 import pygame
 from Button_class import Button
 from main_functions import terminate
+from main_functions import load_image
 
 pygame.init()
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -30,4 +31,6 @@ def dead(screen, current_level):
                 pygame.mouse.set_visible(False)
                 return current_level
         all_sprites.draw(screen)
+        screen.blit(pygame.transform.scale(load_image('Game_over.png'), (600, 600)),
+                    (screen.get_width() / 2 - 300, -100))
         pygame.display.flip()

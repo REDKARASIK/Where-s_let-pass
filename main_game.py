@@ -2,7 +2,7 @@ import pygame
 
 from class_map import Map
 from dower_chest import DowerChest
-from main_functions import terminate
+from main_functions import terminate, load_image
 from player_class import Player
 from camera_class import Camera
 from class_enemy import Enemy
@@ -43,6 +43,9 @@ def main_game(screen, name_level):
     Enemy(120, 120, map_level, player, enemy_group, all_sprites)
     inventory = Inventory(screen, player, screen.get_width() // 2, 0, inventory_group)
     finish = Finish((1845, 75), player, all_sprites)
+    fon_dead = pygame.transform.scale(load_image('Game_over.png'), (600, 600))
+    alpha = 50
+    fon_dead.set_alpha(alpha)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -64,6 +67,10 @@ def main_game(screen, name_level):
         player_group.draw(screen)
         player_stats.draw(screen)
         player_group.update(pygame.key.get_pressed())
+        if player.timer != 0:
+            screen.blit(fon_dead, (screen.get_width() / 2 - 300, -100))
+            alpha += 50
+            fon_dead.set_alpha(alpha)
         if player.deads:
             for x in all_sprites:
                 x.kill()
