@@ -34,7 +34,8 @@ class Player(pygame.sprite.Sprite):
         self.cut_sheet(self.flame_frames, load_image('Flame_jet.png', 'white'), 14, 1)
         self.flame_frames.append(self.flame_frames[-1])
         self.dead_frames = []
-        self.cut_sheet(self.dead_frames, load_image('Dead.png', 'white'), 6, 1)
+        self.cut_sheet(self.dead_frames, load_image('Dead.png'), 6, 1)
+        self.dead_frames.append(self.dead_frames[-1])
         self.image = self.idle_frames[self.cur_frame]
         self.rect = self.rect.move(x, y)
         self.transform = False
@@ -46,7 +47,7 @@ class Player(pygame.sprite.Sprite):
         self.damage_1 = 10
         self.attack_2 = False
         self.damage_2 = 20
-        self.health = 100
+        self.health = 20
         self.hurt_check = False
         self.mask = pygame.mask.from_surface(self.image)
         self.stamina = 100
@@ -59,6 +60,8 @@ class Player(pygame.sprite.Sprite):
         self.inventory = {'medicine chest': 1}
         self.attack_flame = False
         self.damage_3 = 10
+        self.dead_time = 15
+        self.timer = 0
 
     def cut_sheet(self, frames, sheet, columns, rows):
         k = 0.9
@@ -132,7 +135,7 @@ class Player(pygame.sprite.Sprite):
             self.image = pygame.transform.flip(self.image, True, False)
 
     def update(self, *args):
-        if not self.dead:
+        if self.dead_check:
             self.stamina_up = (self.stamina_up + 1) % self.stamina_up_time
             if self.stamina_up == 0:
                 self.stamina += 10
@@ -282,13 +285,15 @@ class Player(pygame.sprite.Sprite):
             if self.dead_check:
                 self.dead_check = False
                 self.cur_frame = 0
-                self.dead = True
-            if self.cur_frame == len(self.dead_frames) - 1:
-                self.deads = True
-            self.image = self.dead_frames[self.cur_frame]
-            self.cur_frame = (self.cur_frame + 1) % len(self.dead_frames)
-            if self.transform:
-                self.image = pygame.transform.flip(self.image, True, False)
+            if self.timer == 0:
+                self.image = self.dead_frames[self.cur_frame]
+                self.cur_frame = (self.cur_frame + 1) % len(self.dead_frames)
+                if self.transform:
+                    self.image = pygame.transform.flip(self.image, True, False)
+            if self.cur_frame == 0:
+                if self.timer == self.dead_time:
+                    self.deads = True
+                self.timer += 1
 
 
 if __name__ == '__main__':

@@ -7,7 +7,7 @@ screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 all_sprites = pygame.sprite.Group()
 
 
-def dead(screen):
+def dead(screen, current_level):
     pygame.mouse.set_visible(True)
     color = pygame.Color('black')
     color.hsva = (100, 0, 100, 100)
@@ -24,14 +24,10 @@ def dead(screen):
     while True:
         for event in pygame.event.get():
             all_sprites.update(event)
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    pygame.mouse.set_visible(False)
-                    return
             if exit.click(event):
                 terminate()
             if continuing.click(event):
                 pygame.mouse.set_visible(False)
-                return 1
+                return current_level
         all_sprites.draw(screen)
         pygame.display.flip()

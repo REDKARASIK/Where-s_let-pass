@@ -69,7 +69,7 @@ def main_game(screen, name_level):
                 x.kill()
             for x in player_group:
                 x.kill()
-            return dead(screen)
+            return dead(screen, name_level)
         player_stats.update()
         if inventory.open_check:
             inventory_group.update()
