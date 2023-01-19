@@ -20,30 +20,40 @@ class Inventory(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.open_check = False
+        self.medicine = None
 
     def update(self, *args):
         pygame.mouse.set_visible(True)
         x = 10
         y = 10
         all_sprites = pygame.sprite.Group()
+        self.image.fill('black')
         for i in self.player.inventory.keys():
-            if i == 'medicine chest':
-                pygame.draw.rect(self.image, 'white',
-                                 (x - 2, y - 2, 68, 68), 2)
-                medicine = pygame.sprite.Sprite()
-                medicine.image = pygame.Surface((70, 70))
-                medicine.rect = pygame.Rect((x - 2, y - 2, 68, 68))
-                all_sprites.add(medicine)
-                font = pygame.font.Font(None, 20)
-                self.image.blit(font.render(str(self.player.inventory[i]), True, 'white'), (x + 70, 70))
-                all_sprites.draw(self.image)
-                self.image.blit(Inventory.medicine, (x, y))
-            x += 15
-            if x > self.rect.w:
-                y += 15
-        if args[0][0] and medicine.rect.collidepoint(*args[1]):
-            self.player.health += 20
-            self.player.inventory['medicine chest'] -= 1
+            if self.player.inventory[i] > 0:
+                if i == 'medicine chest':
+                    self.medicine = pygame.sprite.Sprite()
+                    self.medicine.image = pygame.Surface((70, 70))
+                    self.medicine.rect = pygame.Rect((x - 2, y - 2, 68, 68))
+                    all_sprites.add(self.medicine)
+                    font = pygame.font.Font(None, 20)
+                    self.image.blit(font.render(str(self.player.inventory[i]), True, 'white'), (x + 70, 70))
+                    all_sprites.draw(self.image)
+                    pygame.draw.rect(self.image, 'white',
+                                     (x - 2, y - 2, 68, 68), 2)
+                    self.image.blit(Inventory.medicine, (x, y))
+                x += 15
+                if x > self.rect.w:
+                    y += 15
+
+    def take_from(self, *args):
+        if self.medicine:
+            if self.medicine.rect.collidepoint(args[0][0] - self.screen.get_width() / 2,
+                                               args[0][1]) and self.player.health < 100:
+                self.player.health += 20
+                if self.player.health > 100:
+                    self.player.health = 100
+                self.player.inventory['medicine chest'] -= 1
+                self.medicine = None
 
     def change_open(self):
         if self.open_check:

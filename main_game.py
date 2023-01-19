@@ -51,6 +51,9 @@ def main_game(screen, name_level):
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_i:
                         inventory.change_open()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if inventory.open_check:
+                    inventory.take_from(pygame.mouse.get_pos())
         screen.fill('black')
         camera.update(player)
         map_level.render(screen, *camera.apply())
@@ -69,8 +72,7 @@ def main_game(screen, name_level):
             return dead(screen)
         player_stats.update()
         if inventory.open_check:
-            inventory_group.update(pygame.mouse.get_pressed(), pygame.mouse.get_pos())
-            print(pygame.mouse.get_pos())
+            inventory_group.update()
             inventory_group.draw(screen)
         if finish.is_finish():
             print('FINISH')
