@@ -28,7 +28,7 @@ class DowerChest(pygame.sprite.Sprite):
         self.group = group
         self.player = player
         self.screen = screen
-        self.items = ["medicine chest"]
+        self.items = ['stamina chest']
         self.image = DowerChest.imageclosed
         self.item = random.choice(self.items)
         self.rect = self.image.get_rect()
