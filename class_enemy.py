@@ -38,9 +38,11 @@ class Enemy(pygame.sprite.Sprite):
         self.time = 0
         self.mask = pygame.mask.from_surface(self.image)
         self.cnt_attacks = 0
+        self.distance = 0
+        self.walk_distance = 250
 
     def cut_sheet(self, frames, sheet, columns, rows):
-        k = 1
+        k = 0.9
         sheet = pygame.transform.scale(sheet, (int(sheet.get_width() * k), int(sheet.get_height() * k)))
         self.rect = pygame.Rect(0, 0, sheet.get_width() // columns,
                                 sheet.get_height() // rows)
@@ -56,19 +58,20 @@ class Enemy(pygame.sprite.Sprite):
         else:
             target_x, target_y = self.player.rect.x, self.player.rect.y
             x, y = self.rect.x, self.rect.y
-            distance = ((target_x - x) ** 2 + (target_y - y) ** 2) ** 0.5
+            self.distance = ((target_x - x) ** 2 + (target_y - y) ** 2) ** 0.5
             self.mask = pygame.mask.from_surface(self.image)
             self.player.mask = pygame.mask.from_surface(self.player.image)
-            if not (pygame.sprite.collide_mask(self, self.player)) and distance <= 200 and self.dead:
+            if not (pygame.sprite.collide_mask(self, self.player)) and self.dead:
                 if not self.walk_check:
                     self.cur_frame = 0
-                self.walk_player()
-                self.follow_player(x, y, target_x, target_y)
+                if self.distance <= self.walk_distance:
+                    self.follow_player(x, y, target_x, target_y)
+                print(self.distance, self.cur_frame)
             if pygame.sprite.collide_mask(self, self.player) and self.dead and self.time == 0:
                 if not self.attack or self.walk_check:
                     self.cur_frame = 0
                 self.fight_player()
-            if (distance >= 200 and self.dead) or (self.dead and self.time != 0):
+            if (self.distance >= self.walk_distance and self.dead) or (self.dead and self.time != 0):
                 if self.walk_check or self.attack:
                     self.cur_frame = 0
                 self.idle_enemy()
@@ -82,36 +85,45 @@ class Enemy(pygame.sprite.Sprite):
     def follow_player(self, x1, y1, x2, y2):
         coords_of_angles = [(x1, y1), (x1 + self.rect.width, y1), (x1 + self.rect.width, y1 + self.rect.height),
                             (x1, y1 + self.rect.height)]
-        if x1 > x2:
+        delta_x, delta_y = abs(x1 - x2), abs(y1 - y2)
+        if x1 > x2 and delta_x > delta_y:
             coords = list(
                 map(lambda x: [(x[0] - self.speed - self.map_check.dx) // self.map_check.tile_size,
                                (x[1] - self.map_check.dy) // self.map_check.height],
                     coords_of_angles))
             if all(self.map_check.is_free(coord) for coord in coords):
-                self.rect.x -= self.speed
-                self.transform = True
-        if x1 < x2:
+                if self.distance <= self.walk_distance:
+                    self.rect.x -= self.speed
+                    self.transform = True
+                    self.walk_player()
+        if x1 < x2 and delta_x > delta_y:
             coords = list(
                 map(lambda x: [(x[0] + self.speed - self.map_check.dx) // self.map_check.tile_size,
                                (x[1] - self.map_check.dy) // self.map_check.height],
                     coords_of_angles))
             if all(self.map_check.is_free(coord) for coord in coords):
-                self.rect.x += self.speed
+                if self.distance <= self.walk_distance:
+                    self.rect.x += self.speed
+                    self.walk_player()
                 self.transform = False
-        if y1 > y2:
+        if y1 > y2 and delta_y > delta_x:
             coords = list(
                 map(lambda x: [(x[0] - self.map_check.dx) // self.map_check.tile_size,
                                (x[1] - self.speed - self.map_check.dy) // self.map_check.height],
                     coords_of_angles))
             if all(self.map_check.is_free(coord) for coord in coords):
-                self.rect.y -= self.speed
-        if y1 < y2:
+                if self.distance <= self.walk_distance:
+                    self.rect.y -= self.speed
+                    self.walk_player()
+        if y1 < y2 and delta_y > delta_x:
             coords = list(
                 map(lambda x: [(x[0] - self.map_check.dx) // self.map_check.tile_size,
                                (x[1] + self.speed - self.map_check.dy) // self.map_check.height],
                     coords_of_angles))
             if all(self.map_check.is_free(coord) for coord in coords):
-                self.rect.y += self.speed
+                if self.distance <= self.walk_distance:
+                    self.rect.y += self.speed
+                    self.walk_player()
 
     def fight_player(self):
         if self.cnt_attacks != 2:
@@ -123,15 +135,16 @@ class Enemy(pygame.sprite.Sprite):
         if self.transform:
             self.image = pygame.transform.flip(self.image, True, False)
         if self.cur_frame == 0:
-            self.cnt_attacks = (self.cnt_attacks + 1) % 3
-            self.player.health -= self.damage
             self.player.hurt_check = True
             if not (self.player.attack or self.player.attack_2):
                 self.player.cur_frame = 0
             if self.cnt_attacks != 2:
+                self.player.health -= self.damage
                 self.time = 25
             else:
+                self.player.health -= self.damage * 2
                 self.time = 50
+            self.cnt_attacks = (self.cnt_attacks + 1) % 3
             self.attack = False
         self.attack = True
         self.walk_check = False
