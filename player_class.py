@@ -48,6 +48,7 @@ class Player(pygame.sprite.Sprite):
         self.speed_2 = 15
         self.speed_1 = 10
         self.speed = self.speed_1
+        self.inventory = {}
 
     def cut_sheet(self, frames, sheet, columns, rows):
         k = 0.9

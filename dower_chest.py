@@ -4,6 +4,7 @@ from main_functions import terminate
 from main_functions import load_image
 from player_class import Player
 from class_map import Map
+from item import Item
 
 # лучший класс отвечаю!!!!!!!!!
 pygame.init()
@@ -24,9 +25,10 @@ class DowerChest(pygame.sprite.Sprite):
 
     def __init__(self, pos, screen, player, *group):
         super().__init__(*group)
+        self.group = group
         self.player = player
         self.screen = screen
-        self.items = ["medicine chest", "stamina chest"]
+        self.items = ["medicine chest"]
         self.image = DowerChest.imageclosed
         self.item = random.choice(self.items)
         self.rect = self.image.get_rect()
@@ -42,14 +44,7 @@ class DowerChest(pygame.sprite.Sprite):
         if pygame.sprite.collide_rect(self, self.player) and args[0][
             pygame.K_e] and self.image == DowerChest.imageclosed:
             self.image = DowerChest.imageopen
-            if self.item == "medicine chest":
-                self.player.health += 20
-                if self.player.health > 100:
-                    self.player.health = 100
-            else:
-                self.player.stamina += 20
-                if self.player.stamina > 100:
-                    self.player.stamina = 100
+            Item(self.screen, self.rect.x + 4, self.rect.y + self.rect.h + 1, self.item, self.player, *self.group)
 
 
 if __name__ == '__main__':

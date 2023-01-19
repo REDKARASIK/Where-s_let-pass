@@ -28,7 +28,7 @@ def main_game(screen, name_level):
                   62, 63, 70, 71, 72, 73, 79]
     map_level = Map(name_level,
                     list(map(lambda x: x + 1, free_tiles)), 50)
-    start_pos = (50, 800)
+    start_pos = (64, 64)
     player = Player(*start_pos, map_level, enemy_group, player_group)
     player.speed_1 = 35 / fps
     player.speed_2 = player.speed_1 * 2
@@ -49,7 +49,7 @@ def main_game(screen, name_level):
                     settings(screen)
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_i:
-                        inventory_group.update()
+                        inventory.change_open()
         screen.fill('black')
         camera.update(player)
         map_level.render(screen, *camera.apply())
@@ -62,6 +62,8 @@ def main_game(screen, name_level):
         player_group.update(pygame.key.get_pressed())
         player_stats.update()
         if inventory.open_check:
+            inventory_group.update(pygame.mouse.get_pressed(), pygame.mouse.get_pos())
+            print(pygame.mouse.get_pos())
             inventory_group.draw(screen)
         if finish.is_finish():
             print('FINISH')
@@ -71,4 +73,4 @@ def main_game(screen, name_level):
 
 
 if __name__ == '__main__':
-    main_game(screen, 'first_level.tmx')
+    main_game(screen, 'project_of_map.tmx')
