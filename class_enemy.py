@@ -1,5 +1,4 @@
 from player_class import *
-import time
 
 pygame.init()
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -18,6 +17,8 @@ class Enemy(pygame.sprite.Sprite):
         self.cut_sheet(self.walk_frames, load_image('zombie_Walk.png', 'white'), 8, 1)
         self.fight_frames = []
         self.cut_sheet(self.fight_frames, load_image('zombie_Attack.png', 'white'), 5, 1)
+        self.fight_frames2 = []
+        self.cut_sheet(self.fight_frames2, load_image('zombie_Attack2.png', 'white'), 11, 1)
         self.dead_frames = []
         self.cut_sheet(self.dead_frames, load_image('zombie_Dead.png', 'white'), 5, 1)
         self.hurt_frames = []
@@ -36,6 +37,7 @@ class Enemy(pygame.sprite.Sprite):
         self.player = player
         self.time = 0
         self.mask = pygame.mask.from_surface(self.image)
+        self.cnt_attacks = 0
 
     def cut_sheet(self, frames, sheet, columns, rows):
         k = 1
@@ -76,6 +78,7 @@ class Enemy(pygame.sprite.Sprite):
                 self.dead_enemy()
             if self.time > 0:
                 self.time -= 1
+
     def follow_player(self, x1, y1, x2, y2):
         coords_of_angles = [(x1, y1), (x1 + self.rect.width, y1), (x1 + self.rect.width, y1 + self.rect.height),
                             (x1, y1 + self.rect.height)]
@@ -111,16 +114,24 @@ class Enemy(pygame.sprite.Sprite):
                 self.rect.y += self.speed
 
     def fight_player(self):
-        self.image = self.fight_frames[self.cur_frame]
-        self.cur_frame = (self.cur_frame + 1) % len(self.fight_frames)
+        if self.cnt_attacks != 2:
+            self.image = self.fight_frames[self.cur_frame]
+            self.cur_frame = (self.cur_frame + 1) % len(self.fight_frames)
+        else:
+            self.image = self.fight_frames2[self.cur_frame]
+            self.cur_frame = (self.cur_frame + 1) % len(self.fight_frames2)
         if self.transform:
             self.image = pygame.transform.flip(self.image, True, False)
         if self.cur_frame == 0:
+            self.cnt_attacks = (self.cnt_attacks + 1) % 3
             self.player.health -= self.damage
             self.player.hurt_check = True
             if not (self.player.attack or self.player.attack_2):
                 self.player.cur_frame = 0
-            self.time = 25
+            if self.cnt_attacks != 2:
+                self.time = 25
+            else:
+                self.time = 50
             self.attack = False
         self.attack = True
         self.walk_check = False
