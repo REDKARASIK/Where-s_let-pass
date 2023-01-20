@@ -67,6 +67,16 @@ class Fireball(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y, level, enemy_group, *groups):
         super().__init__(*groups)
+        self.walk_sound = pygame.mixer.Sound('data/walk_sound.mp3')
+        self.walk_sound.set_volume(0.15)
+        self.run_sound = pygame.mixer.Sound('data/run_sound.mp3')
+        self.run_sound.set_volume(0.15)
+        self.attack_sound = pygame.mixer.Sound('data/attack_1.mp3')
+        self.attack_sound.set_volume(0.15)
+        self.attack_2_sound = pygame.mixer.Sound('data/attack_2.mp3')
+        self.attack_2_sound.set_volume(0.15)
+        self.flame_sound = pygame.mixer.Sound('data/flame.mp3')
+        self.flame_sound.set_volume(0.15)
         self.groups = groups
         self.enemy_group = enemy_group
         self.map_check = level
@@ -122,6 +132,11 @@ class Player(pygame.sprite.Sprite):
         self.damage_3 = 10
         self.dead_time = 15
         self.timer = 0
+        self.walk_sound_flag = False
+        self.run_sound_flag = False
+        self.attack_1_sound = False
+        self.attack_2_s = False
+        self.flame_sound_f = False
 
     def cut_sheet(self, frames, sheet, columns, rows):
         k = 0.9
@@ -249,20 +264,50 @@ class Player(pygame.sprite.Sprite):
                     self.walk_check = False
                     self.run_check = False
                 if self.attack_flame:
+                    if not self.flame_sound_f:
+                        self.flame_sound.play()
+                        self.flame_sound_f = True
                     self.attack_3()
+                else:
+                    self.flame_sound_f = False
+                    self.flame_sound.stop()
                 if self.attack:
+                    if not self.attack_1_sound:
+                        self.attack_sound.play()
+                        self.attack_1_sound = True
                     self.attack_1()
+                else:
+                    self.attack_sound.stop()
+                    self.attack_1_sound = False
                 if self.attack_2:
+                    if not self.attack_2_s:
+                        self.attack_2_sound.play()
+                        self.attack_2_s = True
                     self.attack_2_func()
+                else:
+                    self.attack_2_sound.stop()
+                    self.attack_2_s = False
                 if self.attack_fire:
                     self.attack_fireball()
                 if self.walk_check:
+                    if not self.walk_sound_flag:
+                        self.walk_sound.play(-1)
+                        self.walk_sound_flag = True
                     self.cur_frame = (self.cur_frame + 1) % len(self.walk_frames)
                     self.image = self.walk_frames[self.cur_frame]
                     if self.transform:
                         self.image = pygame.transform.flip(self.image, True, False)
+                else:
+                    self.walk_sound.stop()
+                    self.walk_sound_flag = False
                 if self.run_check:
+                    if not self.run_sound_flag:
+                        self.run_sound.play(-1)
+                        self.run_sound_flag = True
                     self.run()
+                else:
+                    self.run_sound.stop()
+                    self.run_sound_flag = False
                 if not self.attack and not self.attack_2 and not self.attack_flame and not self.attack_fire:
                     self.rect = self.image.get_rect().move(self.rect.x, self.rect.y)
                     if pygame.key.get_mods() & pygame.KMOD_SHIFT and self.stamina >= 5:

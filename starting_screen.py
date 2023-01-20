@@ -11,6 +11,7 @@ screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 
 
 def start_screen(screen, current_level):
+    sound = pygame.mixer.Sound('data/start_screen.mp3')
     fps = 30
     clock = pygame.time.Clock()
     all_buttons = pygame.sprite.Group()
@@ -35,15 +36,19 @@ def start_screen(screen, current_level):
     text_w = text.get_width()
     text_h = text.get_height()
     screen.blit(text, (50, 50))
+    sound.set_volume(0.6)
+    sound.play(-1)
     while True:
         for event in pygame.event.get():
             all_buttons.update(event)
             if exit_game.click(event):
                 terminate()
             if new_game.click(event):
+                sound.stop()
                 return 1
             if continue_game:
                 if continue_game.click(event):
+                    sound.stop()
                     return current_level + 1
         all_buttons.draw(screen)
         pygame.display.flip()

@@ -23,6 +23,7 @@ fps = 10
 
 
 def main_game(screen, name_level):
+    main_sound = pygame.mixer.Sound('data/start_music.mp3')
     pygame.mouse.set_visible(False)
     clock = pygame.time.Clock()
     free_tiles = [6, 7, 8, 9, 16, 17, 18, 19, 26, 27, 28, 29, 11, 12, 13, 14, 21, 22, 23, 24, 31, 32, 33, 34, 60, 61,
@@ -46,6 +47,8 @@ def main_game(screen, name_level):
     fon_dead = pygame.transform.scale(load_image('Game_over.png'), (600, 600))
     alpha = 50
     fon_dead.set_alpha(alpha)
+    main_sound.set_volume(0.02)
+    main_sound.play(-1)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
