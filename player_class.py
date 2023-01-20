@@ -62,7 +62,7 @@ class Fireball(pygame.sprite.Sprite):
                     self.collide = True
                 self.enemy.time = 25
                 self.enemy.hurt_check = True
-                self.rect.x = self.enemy.rect.x + self.enemy.rect.w / 2 - 5
+                self.rect.x = self.enemy.rect.x
             self.image = self.fire_frames[self.cur_frame]
             if self.player.transform:
                 self.image = pygame.transform.flip(self.image, True, False)
@@ -124,7 +124,7 @@ class Player(pygame.sprite.Sprite):
         self.damage_1 = 10
         self.attack_2 = False
         self.damage_2 = 20
-        self.max_health = 10
+        self.max_health = 100
         self.max_stamina = 100
         self.health = self.max_health
         self.hurt_check = False
