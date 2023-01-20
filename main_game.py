@@ -24,6 +24,8 @@ fps = 10
 
 def main_game(screen, name_level):
     main_sound = pygame.mixer.Sound('data/start_music.mp3')
+    dead_sound = pygame.mixer.Sound('data/dead.mp3')
+    dead_play = False
     pygame.mouse.set_visible(False)
     clock = pygame.time.Clock()
     free_tiles = [6, 7, 8, 9, 16, 17, 18, 19, 26, 27, 28, 29, 11, 12, 13, 14, 21, 22, 23, 24, 31, 32, 33, 34, 60, 61,
@@ -47,7 +49,9 @@ def main_game(screen, name_level):
     fon_dead = pygame.transform.scale(load_image('Game_over.png'), (600, 600))
     alpha = 50
     fon_dead.set_alpha(alpha)
-    main_sound.set_volume(0.02)
+    main_sound.set_volume(0.04)
+    volume = 0.01
+    dead_sound.set_volume(volume)
     main_sound.play(-1)
     while True:
         for event in pygame.event.get():
@@ -71,8 +75,14 @@ def main_game(screen, name_level):
         player_stats.draw(screen)
         player_group.update(pygame.key.get_pressed())
         if player.timer != 0:
+            main_sound.stop()
+            if not dead_play:
+                dead_sound.play(-1)
+                dead_play = True
+            dead_sound.set_volume(volume)
             screen.blit(fon_dead, (screen.get_width() / 2 - 300, -100))
             alpha += 50
+            volume += 0.006
             fon_dead.set_alpha(alpha)
         if player.deads:
             for x in all_sprites:

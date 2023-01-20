@@ -17,6 +17,9 @@ class Fireball(pygame.sprite.Sprite):
         self.enemy_group = enemy_group
         self.cur_frame = 0
         self.fire_frames = []
+        self.fireball_sound = pygame.mixer.Sound('data/fireball.mp3')
+        self.fireball_sound.set_volume(0.15)
+        self.fireball_check = False
         self.cut_sheet(self.fire_frames, load_image('Charge.png'), 12, 1)
         self.image = self.fire_frames[self.cur_frame]
         if self.player.transform:
@@ -45,6 +48,9 @@ class Fireball(pygame.sprite.Sprite):
         self.cur_frame = (self.cur_frame + 1) % len(self.fire_frames)
         self.enemy = pygame.sprite.spritecollideany(self, self.enemy_group)
         if self.cur_frame:
+            if not self.fireball_check:
+                self.fireball_sound.play()
+                self.fireball_check = True
             if not self.enemy:
                 if self.player.transform:
                     self.rect.x -= 10
@@ -61,6 +67,8 @@ class Fireball(pygame.sprite.Sprite):
             if self.player.transform:
                 self.image = pygame.transform.flip(self.image, True, False)
         else:
+            self.fireball_sound.stop()
+            self.fireball_check = False
             self.kill()
 
 
@@ -77,6 +85,8 @@ class Player(pygame.sprite.Sprite):
         self.attack_2_sound.set_volume(0.15)
         self.flame_sound = pygame.mixer.Sound('data/flame.mp3')
         self.flame_sound.set_volume(0.15)
+        self.fireball_sound = pygame.mixer.Sound('data/fireball_2.mp3')
+        self.fireball_sound.set_volume(0.35)
         self.groups = groups
         self.enemy_group = enemy_group
         self.map_check = level
@@ -114,7 +124,7 @@ class Player(pygame.sprite.Sprite):
         self.damage_1 = 10
         self.attack_2 = False
         self.damage_2 = 20
-        self.max_health = 100
+        self.max_health = 10
         self.max_stamina = 100
         self.health = self.max_health
         self.hurt_check = False
@@ -137,6 +147,7 @@ class Player(pygame.sprite.Sprite):
         self.attack_1_sound = False
         self.attack_2_s = False
         self.flame_sound_f = False
+        self.fireball_check = False
 
     def cut_sheet(self, frames, sheet, columns, rows):
         k = 0.9
@@ -288,7 +299,13 @@ class Player(pygame.sprite.Sprite):
                     self.attack_2_sound.stop()
                     self.attack_2_s = False
                 if self.attack_fire:
+                    if not self.fireball_check:
+                        self.fireball_check = True
+                        self.fireball_sound.play()
                     self.attack_fireball()
+                else:
+                    self.fireball_sound.stop()
+                    self.fireball_check = False
                 if self.walk_check:
                     if not self.walk_sound_flag:
                         self.walk_sound.play(-1)
