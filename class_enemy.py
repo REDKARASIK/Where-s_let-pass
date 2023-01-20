@@ -1,3 +1,5 @@
+import pygame
+
 from player_class import *
 
 pygame.init()
@@ -40,6 +42,12 @@ class Enemy(pygame.sprite.Sprite):
         self.cnt_attacks = 0
         self.distance = 0
         self.walk_distance = 250
+        self.bite_sound = pygame.mixer.Sound('data/bite.mp3')
+        self.bite_sound.set_volume(0.25)
+        self.bite_check = False
+        self.attack_sound = pygame.mixer.Sound('data/zombie_attack.mp3')
+        self.attack_sound.set_volume(0.25)
+        self.attack_sound_check = False
 
     def cut_sheet(self, frames, sheet, columns, rows):
         k = 0.9
@@ -70,6 +78,8 @@ class Enemy(pygame.sprite.Sprite):
             if pygame.sprite.collide_mask(self, self.player) and self.dead and self.time == 0:
                 if not self.attack or self.walk_check:
                     self.cur_frame = 0
+                    self.bite_check = False
+                    self.attack_sound_check = False
                 self.fight_player()
             if (self.distance >= self.walk_distance and self.dead) or (self.dead and self.time != 0):
                 if self.walk_check or self.attack:
@@ -132,9 +142,16 @@ class Enemy(pygame.sprite.Sprite):
         else:
             self.image = self.fight_frames2[self.cur_frame]
             self.cur_frame = (self.cur_frame + 1) % len(self.fight_frames2)
+            if not self.bite_check:
+                self.bite_sound.play()
+                self.bite_check = True
         if self.transform:
             self.image = pygame.transform.flip(self.image, True, False)
         if self.cur_frame == 0:
+            if self.cnt_attacks != 2:
+                if not self.attack_sound_check:
+                    self.attack_sound.play()
+                    self.attack_sound_check = True
             self.player.hurt_check = True
             if not (self.player.attack or self.player.attack_2):
                 self.player.cur_frame = 0
@@ -146,6 +163,8 @@ class Enemy(pygame.sprite.Sprite):
                 self.time = 50
             self.cnt_attacks = (self.cnt_attacks + 1) % 3
             self.attack = False
+            self.bite_check = False
+            self.attack_sound_check = False
         self.attack = True
         self.walk_check = False
 
