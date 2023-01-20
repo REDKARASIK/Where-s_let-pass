@@ -18,7 +18,7 @@ class Fireball(pygame.sprite.Sprite):
         self.cur_frame = 0
         self.fire_frames = []
         self.fireball_sound = pygame.mixer.Sound('data/fireball.mp3')
-        self.fireball_sound.set_volume(0.15)
+        self.fireball_sound.set_volume(0.25)
         self.fireball_check = False
         self.cut_sheet(self.fire_frames, load_image('Charge.png'), 12, 1)
         self.image = self.fire_frames[self.cur_frame]
@@ -84,9 +84,9 @@ class Player(pygame.sprite.Sprite):
         self.attack_2_sound = pygame.mixer.Sound('data/attack_2.mp3')
         self.attack_2_sound.set_volume(0.15)
         self.flame_sound = pygame.mixer.Sound('data/flame.mp3')
-        self.flame_sound.set_volume(0.15)
+        self.flame_sound.set_volume(0.25)
         self.fireball_sound = pygame.mixer.Sound('data/fireball_2.mp3')
-        self.fireball_sound.set_volume(0.35)
+        self.fireball_sound.set_volume(0.44)
         self.groups = groups
         self.enemy_group = enemy_group
         self.map_check = level
@@ -327,8 +327,9 @@ class Player(pygame.sprite.Sprite):
                     self.run_sound_flag = False
                 if not self.attack and not self.attack_2 and not self.attack_flame and not self.attack_fire:
                     self.rect = self.image.get_rect().move(self.rect.x, self.rect.y)
-                    if pygame.key.get_mods() & pygame.KMOD_SHIFT and self.stamina >= 5:
+                    if pygame.key.get_mods() & pygame.KMOD_SHIFT and self.stamina >= 2.5:
                         self.stamina -= 2.5
+                        self.stamina_up = 0
                         self.speed = self.speed_2
                     else:
                         self.speed = self.speed_1
