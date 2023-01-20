@@ -10,6 +10,7 @@ class Item(pygame.sprite.Sprite):
     medicine = pygame.transform.scale(load_image('first-aid-kit.png'), (20, 20))
     button_e = pygame.transform.scale(load_image('key_e.png', 'blue'), (20, 20))
     stamina = pygame.transform.scale(load_image('stamina-kit.png'), (20, 20))
+    fireball = pygame.transform.scale(load_image('fireball_item.png'), (20, 20))
 
     def __init__(self, screen, x, y, type, player, *group):
         super().__init__(*group)
@@ -19,6 +20,8 @@ class Item(pygame.sprite.Sprite):
             self.image = Item.medicine
         elif type == 'stamina chest':
             self.image = Item.stamina
+        elif type == 'fireball':
+            self.image = Item.fireball
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y

@@ -10,9 +10,64 @@ enemy_group = pygame.sprite.Group()
 fps = 25
 
 
+class Fireball(pygame.sprite.Sprite):
+    def __init__(self, player, enemy_group, *groups):
+        super().__init__(*groups)
+        self.player = player
+        self.enemy_group = enemy_group
+        self.cur_frame = 0
+        self.fire_frames = []
+        self.cut_sheet(self.fire_frames, load_image('Charge.png'), 12, 1)
+        self.image = self.fire_frames[self.cur_frame]
+        if self.player.transform:
+            self.image = pygame.transform.flip(self.image, True, False)
+        self.rect = self.image.get_rect()
+        if not self.player.transform:
+            self.rect.x = self.player.rect.x + self.rect.w / 2 + 10
+        else:
+            self.rect.x = self.player.rect.x - 10
+        self.rect.y = self.rect.y + self.player.rect.h
+        self.enemy = None
+        self.collide = False
+
+    def cut_sheet(self, frames, sheet, columns, rows):
+        k = 0.9
+        sheet = pygame.transform.scale(sheet, (int(sheet.get_width() * k), int(sheet.get_height() * k)))
+        self.rect = pygame.Rect(0, 0, sheet.get_width() // columns,
+                                sheet.get_height() // rows)
+        for j in range(rows):
+            for i in range(columns):
+                frame_location = (self.rect.w * i, self.rect.h * j)
+                frames.append(sheet.subsurface(pygame.Rect(
+                    frame_location, (self.rect.width, self.rect.height))))
+
+    def update(self, *args):
+        self.cur_frame = (self.cur_frame + 1) % len(self.fire_frames)
+        self.enemy = pygame.sprite.spritecollideany(self, self.enemy_group)
+        if self.cur_frame:
+            if not self.enemy:
+                if self.player.transform:
+                    self.rect.x -= 10
+                else:
+                    self.rect.x += 10
+            else:
+                if not self.collide:
+                    self.enemy.health -= 20
+                    self.collide = True
+                self.enemy.time = 25
+                self.enemy.hurt_check = True
+                self.rect.x = self.enemy.rect.x + self.enemy.rect.w / 2 - 5
+            self.image = self.fire_frames[self.cur_frame]
+            if self.player.transform:
+                self.image = pygame.transform.flip(self.image, True, False)
+        else:
+            self.kill()
+
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y, level, enemy_group, *groups):
         super().__init__(*groups)
+        self.groups = groups
         self.enemy_group = enemy_group
         self.map_check = level
         self.idle_frames = []
@@ -33,6 +88,8 @@ class Player(pygame.sprite.Sprite):
         self.flame_frames = []
         self.cut_sheet(self.flame_frames, load_image('Flame_jet.png', 'white'), 14, 1)
         self.flame_frames.append(self.flame_frames[-1])
+        self.fire_ball_attack = []
+        self.cut_sheet(self.fire_ball_attack, load_image('Fireball.png', 'white'), 8, 1)
         self.dead_frames = []
         self.cut_sheet(self.dead_frames, load_image('Dead.png'), 6, 1)
         self.dead_frames.append(self.dead_frames[-1])
@@ -47,18 +104,21 @@ class Player(pygame.sprite.Sprite):
         self.damage_1 = 10
         self.attack_2 = False
         self.damage_2 = 20
-        self.health = 20
+        self.max_health = 100
+        self.max_stamina = 100
+        self.health = self.max_health
         self.hurt_check = False
         self.mask = pygame.mask.from_surface(self.image)
-        self.stamina = 100
+        self.stamina = self.max_stamina
         self.stamina_up = 0
         self.stamina_up_time = 20
         self.run_check = False
         self.speed_2 = 15
         self.speed_1 = 10
         self.speed = self.speed_1
-        self.inventory = {'medicine chest': 1}
+        self.inventory = {'medicine chest': 1, 'fireball': 5}
         self.attack_flame = False
+        self.attack_fire = False
         self.damage_3 = 10
         self.dead_time = 15
         self.timer = 0
@@ -119,6 +179,17 @@ class Player(pygame.sprite.Sprite):
                 collide_enemy.health -= self.damage_2
                 collide_enemy.time = 25
 
+    def attack_fireball(self):
+        self.image = self.fire_ball_attack[self.cur_frame]
+        self.cur_frame = (self.cur_frame + 1) % len(self.fire_ball_attack)
+        if self.transform:
+            self.image = pygame.transform.flip(self.image, True, False)
+        if self.cur_frame == len(self.fire_ball_attack) - 1:
+            Fireball(self, self.enemy_group, self.groups)
+        if not self.cur_frame:
+            self.attack_fire = False
+            self.cur_frame = 0
+
     def hurt(self):
         self.image = self.hurt_frames[self.cur_frame]
         self.cur_frame = (self.cur_frame + 1) % len(self.hurt_frames)
@@ -139,14 +210,14 @@ class Player(pygame.sprite.Sprite):
             self.stamina_up = (self.stamina_up + 1) % self.stamina_up_time
             if self.stamina_up == 0:
                 self.stamina += 10
-                if self.stamina > 100:
-                    self.stamina = 100
+                if self.stamina > self.max_stamina:
+                    self.stamina = self.max_stamina
             if self.hurt_check and not self.attack and not self.attack_2:
                 self.hurt()
             else:
                 k = 45
                 if args[0][
-                    pygame.K_f] and not self.attack_2 and not self.attack and self.stamina >= 10 and not self.attack_flame:
+                    pygame.K_f] and not self.attack_2 and not self.attack and self.stamina >= 10 and not self.attack_flame and not self.attack_fire:
                     self.stamina -= 10
                     self.stamina_up = 0
                     self.cur_frame = 0
@@ -154,26 +225,37 @@ class Player(pygame.sprite.Sprite):
                     self.walk_check = False
                     self.run_check = False
                 if args[0][
-                    pygame.K_v] and not self.attack and not self.attack_2 and not self.attack_flame and self.stamina >= 40:
+                    pygame.K_v] and not self.attack and not self.attack_2 and not self.attack_flame and self.stamina >= 40 and not self.attack_fire:
                     self.stamina_up = 0
                     self.cur_frame = 0
                     self.attack_flame = True
                     self.walk_check = False
                     self.run_check = False
-                if self.attack_flame:
-                    self.attack_3()
-                if self.attack:
-                    self.attack_1()
                 if args[0][
-                    pygame.K_g] and not self.attack and not self.attack_2 and self.stamina >= 25 and not self.attack_flame:
+                    pygame.K_g] and not self.attack and not self.attack_2 and self.stamina >= 25 and not self.attack_flame and not self.attack_fire:
                     self.stamina -= 25
                     self.cur_frame = 0
                     self.stamina_up = 0
                     self.attack_2 = True
                     self.walk_check = False
                     self.run_check = False
+                if args[0][
+                    pygame.K_x] and not self.attack_2 and not self.attack and not self.attack_flame and not self.attack_fire and \
+                        self.inventory['fireball'] > 0:
+                    self.stamina_up = 0
+                    self.inventory['fireball'] -= 1
+                    self.cur_frame = 0
+                    self.attack_fire = True
+                    self.walk_check = False
+                    self.run_check = False
+                if self.attack_flame:
+                    self.attack_3()
+                if self.attack:
+                    self.attack_1()
                 if self.attack_2:
                     self.attack_2_func()
+                if self.attack_fire:
+                    self.attack_fireball()
                 if self.walk_check:
                     self.cur_frame = (self.cur_frame + 1) % len(self.walk_frames)
                     self.image = self.walk_frames[self.cur_frame]
@@ -181,7 +263,7 @@ class Player(pygame.sprite.Sprite):
                         self.image = pygame.transform.flip(self.image, True, False)
                 if self.run_check:
                     self.run()
-                if not self.attack and not self.attack_2 and not self.attack_flame:
+                if not self.attack and not self.attack_2 and not self.attack_flame and not self.attack_fire:
                     self.rect = self.image.get_rect().move(self.rect.x, self.rect.y)
                     if pygame.key.get_mods() & pygame.KMOD_SHIFT and self.stamina >= 5:
                         self.stamina -= 2.5

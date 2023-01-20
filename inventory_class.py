@@ -8,6 +8,7 @@ screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 class Inventory(pygame.sprite.Sprite):
     medicine = pygame.transform.scale(load_image('first-aid-kit.png'), (64, 64))
     stamina = pygame.transform.scale(load_image('stamina-kit.png'), (64, 64))
+    fireball = pygame.transform.scale(load_image('fireball_item.png'), (64, 64))
 
     def __init__(self, screen, player, x, y, *args):
         super().__init__(*args)
@@ -25,6 +26,7 @@ class Inventory(pygame.sprite.Sprite):
         self.open_check = False
         self.medicine = None
         self.stamina = None
+        self.fireball = None
 
     def update(self, *args):
         pygame.mouse.set_visible(True)
@@ -57,6 +59,16 @@ class Inventory(pygame.sprite.Sprite):
                     pygame.draw.rect(self.image, 'white',
                                      (x - 2, y - 2, 68, 68), 2)
                     self.image.blit(Inventory.stamina, (x, y))
+                elif i == 'fireball':
+                    self.fireball = pygame.sprite.Sprite()
+                    self.fireball.image = pygame.Surface((70, 70))
+                    self.fireball.rect = pygame.Rect((x - 2, y - 2, 68, 68))
+                    all_sprites.add(self.fireball)
+                    self.image.blit(font_2.render(str(self.player.inventory[i]), True, 'white'), (x + 70, y + 50))
+                    self.image.blit(font.render('Fireball', True, 'white'), (x + 7, y + 68))
+                    pygame.draw.rect(self.image, 'white',
+                                     (x - 2, y - 2, 68, 68), 2)
+                    self.image.blit(Inventory.fireball, (x, y))
                 x += 100
                 if x > self.rect.w:
                     y += 15

@@ -28,7 +28,7 @@ class DowerChest(pygame.sprite.Sprite):
         self.group = group
         self.player = player
         self.screen = screen
-        self.items = ["medicine chest", 'stamina chest']
+        self.items = ["medicine chest", 'stamina chest', 'fireball']
         self.image = DowerChest.imageclosed
         self.item = random.choice(self.items)
         self.rect = self.image.get_rect()
@@ -40,7 +40,8 @@ class DowerChest(pygame.sprite.Sprite):
         if pygame.sprite.collide_rect(self, self.player) and self.image != DowerChest.imageopen:
             self.image_2 = pygame.Surface((21, 21))
             self.image_2.blit(DowerChest.button_e, (0, 0))
-            self.screen.blit(self.image_2, (self.rect.x - self.image_2.get_width() / 2 + self.rect.w / 2, self.rect.y - self.image_2.get_height()))
+            self.screen.blit(self.image_2, (
+                self.rect.x - self.image_2.get_width() / 2 + self.rect.w / 2, self.rect.y - self.image_2.get_height()))
         if pygame.sprite.collide_rect(self, self.player) and args[0][
             pygame.K_e] and self.image == DowerChest.imageclosed:
             self.image = DowerChest.imageopen
