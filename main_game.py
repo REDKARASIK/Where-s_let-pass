@@ -119,6 +119,8 @@ def main_game(screen, name_level):
             with sqlite3.connect('data/game_db.sqlite') as db_file:
                 db_f = db_file.cursor()
                 db_f.execute(f'update level set current_level = {name_level + 1} where id = 1')
+                db_f.execute(
+                    f'update players_stat set helth = {player.health}, stamina = {player.stamina}, medical = {player.inventory["medical chest"]}, energy = {player.inventory["stamina chest"]}, fireball = {player.inventory["fireball"]}')
                 db_file.commit()
             return name_level + 1
         pygame.display.flip()

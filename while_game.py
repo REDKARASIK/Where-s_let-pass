@@ -1,6 +1,7 @@
 import pygame
 from main_game import main_game
 from starting_screen import start_screen
+from end_screen import ending
 
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 pygame.init()
@@ -13,4 +14,4 @@ while True:
         screen.fill('black')
         c = main_game(screen, c)
     if c == 6:
-        pass
+        c = ending(screen)
