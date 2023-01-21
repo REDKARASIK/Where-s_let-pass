@@ -23,7 +23,7 @@ player_stats = pygame.sprite.Group()
 inventory_group = pygame.sprite.Group()
 delete_group = pygame.sprite.Group()
 fps = 10
-MAP_LEVELS = {1: 'first_level.tmx', 2: 'second_level.tmx', 3: '', 4: '', 5: ''}
+MAP_LEVELS = {1: 'first_level.tmx', 2: 'second_level2.tmx', 3: '', 4: '', 5: ''}
 
 
 def main_game(screen, name_level):
@@ -117,6 +117,7 @@ def main_game(screen, name_level):
             inventory_group.update()
             inventory_group.draw(screen)
         if finish.is_finish():
+            player.score += 20
             with sqlite3.connect('data/game_db.sqlite') as db_file:
                 db_f = db_file.cursor()
                 db_f.execute(f'update level set current_level = {name_level + 1} where id = 1')
