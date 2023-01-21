@@ -9,6 +9,8 @@ screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 
 
 def ending(screen):
+    sound = pygame.mixer.Sound('data/end_music.mp3')
+    sound.set_volume(0.6)
     pygame.mouse.set_visible(True)
     with sqlite3.connect('data/game_db.sqlite') as db_file:
         db_c = db_file.cursor()
@@ -25,12 +27,14 @@ def ending(screen):
     font = pygame.font.Font(None, 150)
     text = font.render('Вы прошли игру!', True, 'white')
     screen.blit(text, (60, 60))
+    sound.play(-1)
     while True:
         for event in pygame.event.get():
             all_buttons.update(event)
             if exit_game.click(event):
                 terminate()
             if menu.click(event):
+                sound.stop()
                 return 'start_screen'
         all_buttons.draw(screen)
         pygame.display.flip()
