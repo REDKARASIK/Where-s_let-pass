@@ -17,6 +17,9 @@ class Fireball(pygame.sprite.Sprite):
         self.enemy_group = enemy_group
         self.cur_frame = 0
         self.fire_frames = []
+        self.fireball_sound = pygame.mixer.Sound('data/fireball.mp3')
+        self.fireball_sound.set_volume(0.25)
+        self.fireball_check = False
         self.cut_sheet(self.fire_frames, load_image('Charge.png'), 12, 1)
         self.image = self.fire_frames[self.cur_frame]
         if self.player.transform:
@@ -45,6 +48,9 @@ class Fireball(pygame.sprite.Sprite):
         self.cur_frame = (self.cur_frame + 1) % len(self.fire_frames)
         self.enemy = pygame.sprite.spritecollideany(self, self.enemy_group)
         if self.cur_frame:
+            if not self.fireball_check:
+                self.fireball_sound.play()
+                self.fireball_check = True
             if not self.enemy:
                 if self.player.transform:
                     self.rect.x -= 10
@@ -56,11 +62,13 @@ class Fireball(pygame.sprite.Sprite):
                     self.collide = True
                 self.enemy.time = 25
                 self.enemy.hurt_check = True
-                self.rect.x = self.enemy.rect.x + self.enemy.rect.w / 2 - 5
+                self.rect.x = self.enemy.rect.x
             self.image = self.fire_frames[self.cur_frame]
             if self.player.transform:
                 self.image = pygame.transform.flip(self.image, True, False)
         else:
+            self.fireball_sound.stop()
+            self.fireball_check = False
             self.kill()
 
 
@@ -76,7 +84,9 @@ class Player(pygame.sprite.Sprite):
         self.attack_2_sound = pygame.mixer.Sound('data/attack_2.mp3')
         self.attack_2_sound.set_volume(0.15)
         self.flame_sound = pygame.mixer.Sound('data/flame.mp3')
-        self.flame_sound.set_volume(0.15)
+        self.flame_sound.set_volume(0.25)
+        self.fireball_sound = pygame.mixer.Sound('data/fireball_2.mp3')
+        self.fireball_sound.set_volume(0.44)
         self.groups = groups
         self.enemy_group = enemy_group
         self.map_check = level
@@ -126,7 +136,7 @@ class Player(pygame.sprite.Sprite):
         self.speed_2 = 15
         self.speed_1 = 10
         self.speed = self.speed_1
-        self.inventory = {'medicine chest': 1, 'fireball': 5}
+        self.inventory = {'medicine chest': 2, 'fireball': 5, 'stamina chest': 1}
         self.attack_flame = False
         self.attack_fire = False
         self.damage_3 = 10
@@ -137,6 +147,7 @@ class Player(pygame.sprite.Sprite):
         self.attack_1_sound = False
         self.attack_2_s = False
         self.flame_sound_f = False
+        self.fireball_check = False
         self.y_up = True
         self.y_down = True
         self.x_up = True
@@ -292,7 +303,13 @@ class Player(pygame.sprite.Sprite):
                     self.attack_2_sound.stop()
                     self.attack_2_s = False
                 if self.attack_fire:
+                    if not self.fireball_check:
+                        self.fireball_check = True
+                        self.fireball_sound.play()
                     self.attack_fireball()
+                else:
+                    self.fireball_sound.stop()
+                    self.fireball_check = False
                 if self.walk_check:
                     if not self.walk_sound_flag:
                         self.walk_sound.play(-1)
@@ -314,8 +331,9 @@ class Player(pygame.sprite.Sprite):
                     self.run_sound_flag = False
                 if not self.attack and not self.attack_2 and not self.attack_flame and not self.attack_fire:
                     self.rect = self.image.get_rect().move(self.rect.x, self.rect.y)
-                    if pygame.key.get_mods() & pygame.KMOD_SHIFT and self.stamina >= 5:
+                    if pygame.key.get_mods() & pygame.KMOD_SHIFT and self.stamina >= 2.5:
                         self.stamina -= 2.5
+                        self.stamina_up = 0
                         self.speed = self.speed_2
                     else:
                         self.speed = self.speed_1

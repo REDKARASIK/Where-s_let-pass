@@ -22,6 +22,9 @@ def dead(screen, current_level):
     exit.rect.y = screen.get_height() // 2 + exit.rect.h // 2 + 50
     continuing.rect.x = screen.get_width() // 2 - continuing.rect.w // 2
     continuing.rect.y = screen.get_height() // 2 - continuing.rect.h - 40
+    menu = Button('Вернуться в меню', 0, 0, all_sprites)
+    menu.rect.x = screen.get_width() // 2 - menu.rect.w // 2
+    menu.rect.y = screen.get_height() // 2 - continuing.rect.h + 55
     while True:
         for event in pygame.event.get():
             all_sprites.update(event)
@@ -29,7 +32,12 @@ def dead(screen, current_level):
                 terminate()
             if continuing.click(event):
                 pygame.mouse.set_visible(False)
+                pygame.mixer.stop()
                 return current_level
+            if menu.click(event):
+                pygame.mouse.set_visible(False)
+                pygame.mixer.stop()
+                return 'start_screen'
         all_sprites.draw(screen)
         screen.blit(pygame.transform.scale(load_image('Game_over.png'), (600, 600)),
                     (screen.get_width() / 2 - 300, -100))
