@@ -35,7 +35,7 @@ class Map:
         self.wall_group = pygame.sprite.Group()
 
     def render(self, screen, dx=0, dy=0):
-        self.wall_group = pygame.sprite.Group()
+        self.wall_group.empty()
         self.dx += dx
         self.dy += dy
         for y in range(self.height):

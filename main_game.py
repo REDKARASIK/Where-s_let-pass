@@ -36,7 +36,8 @@ def main_game(screen, name_level):
                   62, 63, 70, 71, 72, 73, 79]
     borders = [0, 1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40, 41, 42, 43, 44, 45, 50, 51, 52, 53, 54, 55]
     map_level = Map(MAP_LEVELS[name_level],
-                    list(map(lambda x: x + 101, free_tiles)), list(map(lambda x: x + 101, borders)), 50)
+                    list(map(lambda x: x + 101, free_tiles)), list(map(lambda x: x + 1, borders)) + list(map(lambda x: x + 101, borders)), 50)
+    map_level.render(screen)
     if name_level == 1:
         start_pos = (64, 64)
         player = Player(*start_pos, map_level, enemy_group, player_group, delete_group)
@@ -57,6 +58,36 @@ def main_game(screen, name_level):
         Enemy(1600, 1450, map_level, player, enemy_group, all_sprites, delete_group)
         inventory = Inventory(screen, player, screen.get_width() // 2, 0, inventory_group, delete_group)
         finish = Finish((3700, 125), player, all_sprites, delete_group)
+    elif name_level == 2:
+        start_pos = (64, 240)
+        player = Player(*start_pos, map_level, enemy_group, player_group, delete_group)
+        player.speed_1 = 35 / fps
+        player.speed_2 = player.speed_1 * 2
+        Health((1300, 800), player, screen, player_stats, delete_group)
+        Stamina((1300, 820), player, screen, player_stats, delete_group)
+        camera = Camera(screen, start_pos, map_level.width * map_level.tile_size,
+                        map_level.height * map_level.tile_size,
+                        player.speed)
+        DowerChest('stamina chest', (1100, 950), screen, player, all_sprites, delete_group)
+        DowerChest('medicine chest', (920, 860), screen, player, all_sprites, delete_group)
+        DowerChest('fireball', (1300, 300), screen, player, all_sprites, delete_group)
+        DowerChest('fireball', (2600, 1450), screen, player, all_sprites, delete_group)
+        DowerChest('medicine chest', (920, 860), screen, player, all_sprites, delete_group)
+        DowerChest('stamina chest', (1100, 1250), screen, player, all_sprites, delete_group)
+        DowerChest('stamina chest', (100, 1500), screen, player, all_sprites, delete_group)
+        DowerChest('medicine chest', (1800, 1350), screen, player, all_sprites, delete_group)
+        DowerChest('medicine chest', (2500, 750), screen, player, all_sprites, delete_group)
+        Enemy(200, 1400, map_level, player, enemy_group, all_sprites, delete_group)
+        Enemy(1300, 500, map_level, player, enemy_group, all_sprites, delete_group)
+        Enemy(150, 750, map_level, player, enemy_group, all_sprites, delete_group)
+        Enemy(890, 950, map_level, player, enemy_group, all_sprites, delete_group)
+        Enemy(890, 750, map_level, player, enemy_group, all_sprites, delete_group)
+        Enemy(1600, 1450, map_level, player, enemy_group, all_sprites, delete_group)
+        Enemy(2600, 1450, map_level, player, enemy_group, all_sprites, delete_group)
+        Enemy(2500, 750, map_level, player, enemy_group, all_sprites, delete_group)
+        Enemy(1200, 1250, map_level, player, enemy_group, all_sprites, delete_group)
+        inventory = Inventory(screen, player, screen.get_width() // 2, 0, inventory_group, delete_group)
+        finish = Finish((3770, 750), player, all_sprites, delete_group)
     fon_dead = pygame.transform.scale(load_image('Game_over.png'), (600, 600))
     alpha = 50
     fon_dead.set_alpha(alpha)
