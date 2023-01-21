@@ -35,5 +35,6 @@ class DowerChest(pygame.sprite.Sprite):
         if pygame.sprite.collide_rect(self, self.player) and args[0][
             pygame.K_e] and self.image == DowerChest.imageclosed:
             self.image = DowerChest.imageopen
+            self.player.score += 5
             Item(self.screen, self.rect.x + 4, self.rect.y + self.rect.h + 1, self.item, self.player, *self.group)
 

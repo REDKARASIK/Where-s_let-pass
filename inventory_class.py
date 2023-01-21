@@ -80,17 +80,19 @@ class Inventory(pygame.sprite.Sprite):
                                                args[0][1]) and self.player.health < self.player.max_health:
                 self.player.health += 20
                 if self.player.health > self.player.max_health:
-                    self.player.health = 100
+                    self.player.health = self.player.max_health
                 self.player.inventory['medicine chest'] -= 1
                 self.medicine = None
+                self.player.score -= 2
         if self.stamina:
             if self.stamina.rect.collidepoint(args[0][0] - self.screen.get_width() / 2,
                                               args[0][1]) and self.player.stamina < self.player.max_stamina:
                 self.player.stamina += 20
                 if self.player.stamina > self.player.max_stamina:
-                    self.player.stamina = 100
+                    self.player.stamina = self.player.max_stamina
                 self.player.inventory['stamina chest'] -= 1
                 self.stamina = None
+                self.player.score -= 1
 
     def change_open(self):
         if self.open_check:
