@@ -51,7 +51,7 @@ def start_screen(screen):
             if new_game.click(event):
                 sound.stop()
                 db_f.execute('update level set current_level = 1 where id = 1')
-                db_f.execute('update players_stats set helth = 100, max_health = 100, stamina = 100, max_stamina = 100, medical = 2, fireballs = 5, energy = 1 where id = 1')
+                db_f.execute('update players_stats set helth = 100, max_health = 100, stamina = 100, max_stamina = 100, medical = 2, fireballs = 5, energy = 1, score = 0 where id = 1')
                 db_file.commit()
                 return 1
             if continue_game:
