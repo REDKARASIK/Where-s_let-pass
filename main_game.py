@@ -57,6 +57,16 @@ def main_game(screen, name_level):
     volume = 0.01
     dead_sound.set_volume(volume)
     main_sound.play(-1)
+    with sqlite3.connect('data/game_db.sqlite') as db_file:
+        db_c = db_file.cursor()
+        stats = db_c.execute('select * from players_stats').fetchall()[0]
+    player.health = stats[1]
+    player.max_health = stats[2]
+    player.stamina = stats[3]
+    player.max_stamina = stats[4]
+    player.inventory['medical chest'] = stats[5]
+    player.inventory['stamina chest'] = stats[6]
+    player.inventory['fireball'] = stats[7]
     while True:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:

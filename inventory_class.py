@@ -77,17 +77,17 @@ class Inventory(pygame.sprite.Sprite):
     def take_from(self, *args):
         if self.medicine:
             if self.medicine.rect.collidepoint(args[0][0] - self.screen.get_width() / 2,
-                                               args[0][1]) and self.player.health < 100:
+                                               args[0][1]) and self.player.health < self.player.max_health:
                 self.player.health += 20
-                if self.player.health > 100:
+                if self.player.health > self.player.max_health:
                     self.player.health = 100
                 self.player.inventory['medicine chest'] -= 1
                 self.medicine = None
         if self.stamina:
             if self.stamina.rect.collidepoint(args[0][0] - self.screen.get_width() / 2,
-                                              args[0][1]) and self.player.stamina < 100:
+                                              args[0][1]) and self.player.stamina < self.player.max_stamina:
                 self.player.stamina += 20
-                if self.player.stamina > 100:
+                if self.player.stamina > self.player.max_stamina:
                     self.player.stamina = 100
                 self.player.inventory['stamina chest'] -= 1
                 self.stamina = None
