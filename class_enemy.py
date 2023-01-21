@@ -1,4 +1,5 @@
 from player_class import *
+import pygame
 
 pygame.init()
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -40,6 +41,10 @@ class Enemy(pygame.sprite.Sprite):
         self.cnt_attacks = 0
         self.distance = 0
         self.walk_distance = 250
+        self.y_up = True
+        self.y_down = True
+        self.x_up = True
+        self.x_down = True
 
     def cut_sheet(self, frames, sheet, columns, rows):
         k = 0.9
@@ -66,7 +71,6 @@ class Enemy(pygame.sprite.Sprite):
                     self.cur_frame = 0
                 if self.distance <= self.walk_distance:
                     self.follow_player(x, y, target_x, target_y)
-                print(self.distance, self.cur_frame)
             if pygame.sprite.collide_mask(self, self.player) and self.dead and self.time == 0:
                 if not self.attack or self.walk_check:
                     self.cur_frame = 0
@@ -86,44 +90,97 @@ class Enemy(pygame.sprite.Sprite):
         coords_of_angles = [(x1, y1), (x1 + self.rect.width, y1), (x1 + self.rect.width, y1 + self.rect.height),
                             (x1, y1 + self.rect.height)]
         delta_x, delta_y = abs(x1 - x2), abs(y1 - y2)
-        if x1 > x2 and delta_x > delta_y:
-            coords = list(
-                map(lambda x: [(x[0] - self.speed - self.map_check.dx) // self.map_check.tile_size,
-                               (x[1] - self.map_check.dy) // self.map_check.height],
-                    coords_of_angles))
-            if all(self.map_check.is_free(coord) for coord in coords):
-                if self.distance <= self.walk_distance:
+        collide = pygame.sprite.spritecollide(self, self.map_check.wall_group, False)
+        if x1 > x2 and delta_x > delta_y and self.x_down:
+            cnt = 0
+            self.transform = True
+            if self.distance <= self.walk_distance:
+                if collide:
+                    for obj in collide:
+                        if pygame.sprite.collide_mask(self, obj):
+                            self.x_down = False
+                            self.x_up = True
+                            cnt += 1
+                            break
+                if not cnt:
+                    self.x_up = self.x_down = self.y_up = self.y_down = True
                     self.rect.x -= self.speed
-                    self.transform = True
                     self.walk_player()
-        if x1 < x2 and delta_x > delta_y:
-            coords = list(
-                map(lambda x: [(x[0] + self.speed - self.map_check.dx) // self.map_check.tile_size,
-                               (x[1] - self.map_check.dy) // self.map_check.height],
-                    coords_of_angles))
-            if all(self.map_check.is_free(coord) for coord in coords):
-                if self.distance <= self.walk_distance:
+                    for obj in pygame.sprite.spritecollide(self, self.map_check.wall_group, False):
+                        if pygame.sprite.collide_mask(self, obj):
+                            self.rect.x += self.speed
+                            self.x_up = False
+                            self.x_down = True
+                            break
+                else:
+                    self.rect.x += self.speed
+        if x1 < x2 and delta_x > delta_y and self.x_up:
+            cnt = 0
+            self.transform = False
+            if self.distance <= self.walk_distance:
+                if collide:
+                    for obj in collide:
+                        if pygame.sprite.collide_mask(self, obj):
+                            self.x_down = True
+                            self.x_up = False
+                            cnt += 1
+                            break
+                if not cnt:
+                    self.x_up = self.x_down = self.y_up = self.y_down = True
                     self.rect.x += self.speed
                     self.walk_player()
-                self.transform = False
-        if y1 > y2 and delta_y > delta_x:
-            coords = list(
-                map(lambda x: [(x[0] - self.map_check.dx) // self.map_check.tile_size,
-                               (x[1] - self.speed - self.map_check.dy) // self.map_check.height],
-                    coords_of_angles))
-            if all(self.map_check.is_free(coord) for coord in coords):
-                if self.distance <= self.walk_distance:
+                    for obj in pygame.sprite.spritecollide(self, self.map_check.wall_group, False):
+                        if pygame.sprite.collide_mask(self, obj):
+                            self.rect.x -= self.speed
+                            self.x_up = False
+                            self.x_down = True
+                            break
+                else:
+                    self.rect.x -= self.speed
+        if y1 > y2 and delta_y > delta_x and self.y_down:
+            cnt = 0
+            if self.distance <= self.walk_distance:
+                if collide:
+                    for obj in collide:
+                        if pygame.sprite.collide_mask(self, obj):
+                            self.y_down = False
+                            self.y_up = True
+                            cnt += 1
+                            break
+                if not cnt:
+                    self.x_up = self.x_down = self.y_up = self.y_down = True
                     self.rect.y -= self.speed
                     self.walk_player()
-        if y1 < y2 and delta_y > delta_x:
-            coords = list(
-                map(lambda x: [(x[0] - self.map_check.dx) // self.map_check.tile_size,
-                               (x[1] + self.speed - self.map_check.dy) // self.map_check.height],
-                    coords_of_angles))
-            if all(self.map_check.is_free(coord) for coord in coords):
-                if self.distance <= self.walk_distance:
+                    for obj in pygame.sprite.spritecollide(self, self.map_check.wall_group, False):
+                        if pygame.sprite.collide_mask(self, obj):
+                            self.rect.y += self.speed
+                            self.y_up = False
+                            self.y_down = True
+                            break
+                else:
+                    self.rect.y += self.speed
+        if y1 < y2 and delta_y > delta_x and self.y_up:
+            cnt = 0
+            if self.distance <= self.walk_distance:
+                if collide:
+                    for obj in collide:
+                        if pygame.sprite.collide_mask(self, obj):
+                            self.y_down = True
+                            self.y_up = False
+                            cnt += 1
+                            break
+                if not cnt:
+                    self.x_up = self.x_down = self.y_up = self.y_down = True
                     self.rect.y += self.speed
                     self.walk_player()
+                    for obj in pygame.sprite.spritecollide(self, self.map_check.wall_group, False):
+                        if pygame.sprite.collide_mask(self, obj):
+                            self.rect.y -= self.speed
+                            self.y_up = True
+                            self.y_down = False
+                            break
+                else:
+                    self.rect.y -= self.speed
 
     def fight_player(self):
         if self.cnt_attacks != 2:

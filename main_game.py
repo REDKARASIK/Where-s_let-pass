@@ -5,7 +5,7 @@ from dower_chest import DowerChest
 from main_functions import terminate, load_image
 from player_class import Player
 from camera_class import Camera
-from class_enemy import Enemy
+from class_enemy import *
 from class_finish import Finish
 from health_and_stamina_class import Health, Stamina
 from settup import settings
@@ -26,11 +26,12 @@ def main_game(screen, name_level):
     main_sound = pygame.mixer.Sound('data/start_music.mp3')
     pygame.mouse.set_visible(False)
     clock = pygame.time.Clock()
-    free_tiles = [6, 7, 8, 9, 16, 17, 18, 19, 26, 27, 28, 29, 11, 12, 13, 14, 21, 22, 23, 24, 31, 32, 33, 34, 60, 61,
+    free_tiles = [6, 7, 8, 9, 11, 12, 13, 14, 16, 17, 18, 19, 21, 22, 23, 24, 26, 27, 28, 29, 31, 32, 33, 34, 60, 61,
                   62, 63, 70, 71, 72, 73, 79]
+    borders = [0, 1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40, 41, 42, 43, 44, 45, 50, 51, 52, 53, 54, 55]
     map_level = Map(name_level,
-                    list(map(lambda x: x + 1, free_tiles)), 50)
-    start_pos = (64, 64)
+                    list(map(lambda x: x + 101, free_tiles)),list(map(lambda x: x + 101, borders)), 50)
+    start_pos = (256, 256)
     player = Player(*start_pos, map_level, enemy_group, player_group)
     player.speed_1 = 35 / fps
     player.speed_2 = player.speed_1 * 2
@@ -39,8 +40,6 @@ def main_game(screen, name_level):
     Stamina((1300, 820), player, screen, player_stats)
     camera = Camera(screen, start_pos, map_level.width * map_level.tile_size, map_level.height * map_level.tile_size,
                     player.speed)
-    print(camera.map_w, camera.map_h, map_level.width, map_level.height, map_level.tile_size)
-    print(120 * 32, 64 * 32)
     Enemy(120, 120, map_level, player, enemy_group, all_sprites)
     inventory = Inventory(screen, player, screen.get_width() // 2, 0, inventory_group)
     finish = Finish((1845, 75), player, all_sprites)
@@ -50,6 +49,7 @@ def main_game(screen, name_level):
     main_sound.set_volume(0.02)
     main_sound.play(-1)
     while True:
+        player.stamina = 100
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
@@ -62,6 +62,7 @@ def main_game(screen, name_level):
                     inventory.take_from(pygame.mouse.get_pos())
         screen.fill('black')
         camera.update(player)
+        map_level.wall_group.draw(screen)
         map_level.render(screen, *camera.apply())
         for sprite in all_sprites:
             camera.apply(sprite)
@@ -92,4 +93,4 @@ def main_game(screen, name_level):
 
 
 if __name__ == '__main__':
-    main_game(screen, 'project_of_map.tmx')
+    main_game(screen, 'first_level.tmx')

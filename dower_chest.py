@@ -6,16 +6,7 @@ from player_class import Player
 from class_map import Map
 from item import Item
 
-# лучший класс отвечаю!!!!!!!!!
-pygame.init()
-size = width, height = 500, 500
-screen = pygame.display.set_mode(size)
-all_sprites = pygame.sprite.Group()
-maps = Map('project_of_map.tmx', [7], 1)
-players = Player(50, 50, maps, all_sprites)
-player_sprites = pygame.sprite.Group()
-player_sprites.add(players)
-fps = 15
+
 
 
 class DowerChest(pygame.sprite.Sprite):
@@ -47,18 +38,3 @@ class DowerChest(pygame.sprite.Sprite):
             self.image = DowerChest.imageopen
             Item(self.screen, self.rect.x + 4, self.rect.y + self.rect.h + 1, self.item, self.player, *self.group)
 
-
-if __name__ == '__main__':
-    clock = pygame.time.Clock()
-    DowerChest((40, 40), screen, players, all_sprites)
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                terminate()
-        screen.fill('black')
-        maps.render(screen)
-        all_sprites.update(pygame.key.get_pressed())
-        all_sprites.draw(screen)
-        player_sprites.draw(screen)
-        pygame.display.flip()
-        clock.tick(fps)
