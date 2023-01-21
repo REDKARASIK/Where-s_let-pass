@@ -1,18 +1,13 @@
 import sqlite3
 
-import pygame
-
-from class_map import Map
-from dower_chest import DowerChest
-from main_functions import terminate, load_image
-from player_class import Player
 from camera_class import Camera
 from class_enemy import *
 from class_finish import Finish
-from health_and_stamina_class import Health, Stamina
-from settup import settings
-from inventory_class import Inventory
 from dead_class import dead
+from dower_chest import DowerChest
+from health_and_stamina_class import Health, Stamina
+from inventory_class import Inventory
+from settup import settings
 
 pygame.init()
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -36,7 +31,8 @@ def main_game(screen, name_level):
                   62, 63, 70, 71, 72, 73, 79]
     borders = [0, 1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40, 41, 42, 43, 44, 45, 50, 51, 52, 53, 54, 55]
     map_level = Map(MAP_LEVELS[name_level],
-                    list(map(lambda x: x + 101, free_tiles)), list(map(lambda x: x + 1, borders)) + list(map(lambda x: x + 101, borders)), 50)
+                    list(map(lambda x: x + 101, free_tiles)),
+                    list(map(lambda x: x + 1, borders)) + list(map(lambda x: x + 101, borders)), 50)
     map_level.render(screen)
     if name_level == 1:
         start_pos = (64, 64)
@@ -181,14 +177,22 @@ def main_game(screen, name_level):
             inventory_group.update()
             inventory_group.draw(screen)
         if finish.is_finish():
-            player.score += 20
-            with sqlite3.connect('data/game_db.sqlite') as db_file:
-                db_f = db_file.cursor()
-                db_f.execute(f'update level set current_level = {name_level + 1} where id = 1')
-                db_f.execute(
-                    f'update players_stat set helth = {player.health}, medical = {player.inventory["medical chest"]}, energy = {player.inventory["stamina chest"]}, fireball = {player.inventory["fireball"]}, score : {player.score}')
-                db_file.commit()
-            return name_level + 1
+            for x in delete_group:
+                x.kill()
+            c = settings(screen)
+            if c == 1:
+                return name_level
+            elif c:
+                return c
+            elif not c:
+                player.score += 20
+                with sqlite3.connect('data/game_db.sqlite') as db_file:
+                    db_f = db_file.cursor()
+                    db_f.execute(f'update level set current_level = {name_level + 1} where id = 1')
+                    db_f.execute(
+                        f'update players_stats set helth = {player.health}, medical = {player.inventory["medical chest"]}, energy = {player.inventory["stamina chest"]}, fireballs = {player.inventory["fireball"]}, score = {player.score}')
+                    db_file.commit()
+                return name_level + 1
         pygame.display.flip()
         clock.tick(fps)
 
