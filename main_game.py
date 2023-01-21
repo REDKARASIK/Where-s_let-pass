@@ -35,12 +35,8 @@ def main_game(screen, name_level):
     free_tiles = [6, 7, 8, 9, 16, 17, 18, 19, 26, 27, 28, 29, 11, 12, 13, 14, 21, 22, 23, 24, 31, 32, 33, 34, 60, 61,
                   62, 63, 70, 71, 72, 73, 79]
     borders = [0, 1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40, 41, 42, 43, 44, 45, 50, 51, 52, 53, 54, 55]
-    map_level = Map(name_level,
-                    list(map(lambda x: x + 101, free_tiles)),list(map(lambda x: x + 101, borders)), 50)
-    start_pos = (256, 256)
-    player = Player(*start_pos, map_level, enemy_group, player_group)
     map_level = Map(MAP_LEVELS[name_level],
-                    list(map(lambda x: x + 1, free_tiles)), 50)
+                    list(map(lambda x: x + 101, free_tiles)), list(map(lambda x: x + 101, borders)), 50)
     start_pos = (64, 64)
     player = Player(*start_pos, map_level, enemy_group, player_group, delete_group)
     player.speed_1 = 35 / fps
@@ -132,4 +128,4 @@ def main_game(screen, name_level):
 
 
 if __name__ == '__main__':
-    main_game(screen, 'first_level.tmx')
+    main_game(screen, 1)
