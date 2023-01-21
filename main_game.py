@@ -23,7 +23,7 @@ player_stats = pygame.sprite.Group()
 inventory_group = pygame.sprite.Group()
 delete_group = pygame.sprite.Group()
 fps = 10
-MAP_LEVELS = {1: 'first_level.tmx'}
+MAP_LEVELS = {1: 'first_level.tmx', 2: '', 3: '', 4: '', 5: ''}
 
 
 def main_game(screen, name_level):
@@ -41,7 +41,7 @@ def main_game(screen, name_level):
     player = Player(*start_pos, map_level, enemy_group, player_group, delete_group)
     player.speed_1 = 35 / fps
     player.speed_2 = player.speed_1 * 2
-    DowerChest((100, 70), screen, player, all_sprites, delete_group)
+    DowerChest('medicine chest', (100, 70), screen, player, all_sprites, delete_group)
     Health((1300, 800), player, screen, player_stats, delete_group)
     Stamina((1300, 820), player, screen, player_stats, delete_group)
     camera = Camera(screen, start_pos, map_level.width * map_level.tile_size, map_level.height * map_level.tile_size,
@@ -61,11 +61,12 @@ def main_game(screen, name_level):
         stats = db_c.execute('select * from players_stats').fetchall()[0]
     player.health = stats[1]
     player.max_health = stats[2]
-    player.stamina = stats[3]
+    player.stamina = stats[4]
     player.max_stamina = stats[4]
     player.inventory['medical chest'] = stats[5]
     player.inventory['stamina chest'] = stats[6]
     player.inventory['fireball'] = stats[7]
+    player.score = stats[8]
     while True:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -120,7 +121,7 @@ def main_game(screen, name_level):
                 db_f = db_file.cursor()
                 db_f.execute(f'update level set current_level = {name_level + 1} where id = 1')
                 db_f.execute(
-                    f'update players_stat set helth = {player.health}, stamina = {player.stamina}, medical = {player.inventory["medical chest"]}, energy = {player.inventory["stamina chest"]}, fireball = {player.inventory["fireball"]}')
+                    f'update players_stat set helth = {player.health}, medical = {player.inventory["medical chest"]}, energy = {player.inventory["stamina chest"]}, fireball = {player.inventory["fireball"]}, score : {player.score}')
                 db_file.commit()
             return name_level + 1
         pygame.display.flip()

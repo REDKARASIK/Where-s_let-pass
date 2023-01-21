@@ -14,14 +14,13 @@ class DowerChest(pygame.sprite.Sprite):
     imageclosed = pygame.transform.scale(load_image("chestclosed.png", 'white'), (24, 24))
     button_e = pygame.transform.scale(load_image('key_e.png', 'blue'), (20, 20))
 
-    def __init__(self, pos, screen, player, *group):
+    def __init__(self, item, pos, screen, player, *group):
         super().__init__(*group)
         self.group = group
         self.player = player
         self.screen = screen
-        self.items = ["medicine chest", 'stamina chest', 'fireball']
         self.image = DowerChest.imageclosed
-        self.item = random.choice(self.items)
+        self.item = item
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect.x = pos[0]

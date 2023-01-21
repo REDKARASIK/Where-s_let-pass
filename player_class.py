@@ -152,6 +152,7 @@ class Player(pygame.sprite.Sprite):
         self.y_down = True
         self.x_up = True
         self.x_down = True
+        self.score = 0
 
     def cut_sheet(self, frames, sheet, columns, rows):
         k = 0.9
