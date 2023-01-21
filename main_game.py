@@ -23,7 +23,7 @@ player_stats = pygame.sprite.Group()
 inventory_group = pygame.sprite.Group()
 delete_group = pygame.sprite.Group()
 fps = 10
-MAP_LEVELS = {1: 'first_level.tmx', 2: 'second_level.tmx', 3: 'third_level.tmx', 4: '', 5: ''}
+MAP_LEVELS = {1: 'first_level.tmx', 2: 'second_level.tmx'}
 
 
 def main_game(screen, name_level):
@@ -41,7 +41,7 @@ def main_game(screen, name_level):
     if name_level == 1:
         start_pos = (64, 64)
         player = Player(*start_pos, map_level, enemy_group, player_group, delete_group)
-        player.speed_1 = 150 / fps
+        player.speed_1 = 35 / fps
         player.speed_2 = player.speed_1 * 2
         Health((1300, 800), player, screen, player_stats, delete_group)
         Stamina((1300, 820), player, screen, player_stats, delete_group)
