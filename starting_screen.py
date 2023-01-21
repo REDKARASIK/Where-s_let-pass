@@ -2,6 +2,7 @@ import sys
 import pygame
 import os
 import random
+import sqlite3
 from main_functions import load_image, terminate
 from Button_class import Button
 
@@ -10,7 +11,11 @@ pygame.init()
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 
 
-def start_screen(screen, current_level):
+def start_screen(screen):
+    pygame.mouse.set_visible(True)
+    with sqlite3.connect('data/game_db.sqlite') as db_file:
+        db_f = db_file.cursor()
+        current_level = db_f.execute('select current_level from level').fetchall()[0][0]
     sound = pygame.mixer.Sound('data/start_screen.mp3')
     fps = 30
     clock = pygame.time.Clock()
@@ -45,11 +50,13 @@ def start_screen(screen, current_level):
                 terminate()
             if new_game.click(event):
                 sound.stop()
+                db_f.execute('update level set current_level = 1 where id = 1')
+                db_file.commit()
                 return 1
             if continue_game:
                 if continue_game.click(event):
                     sound.stop()
-                    return current_level + 1
+                    return current_level
         all_buttons.draw(screen)
         pygame.display.flip()
         clock.tick(fps)

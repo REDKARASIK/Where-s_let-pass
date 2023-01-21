@@ -136,7 +136,7 @@ class Player(pygame.sprite.Sprite):
         self.speed_2 = 15
         self.speed_1 = 10
         self.speed = self.speed_1
-        self.inventory = {'medicine chest': 1, 'fireball': 5}
+        self.inventory = {'medicine chest': 2, 'fireball': 5, 'stamina chest': 1}
         self.attack_flame = False
         self.attack_fire = False
         self.damage_3 = 10
