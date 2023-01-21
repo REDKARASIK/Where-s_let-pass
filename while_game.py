@@ -10,8 +10,8 @@ while True:
     screen.fill('black')
     if c == 'start_screen':
         c = start_screen(screen)
-    if c < 6:
+    if c < 4:
         screen.fill('black')
         c = main_game(screen, c)
-    if c == 6:
+    if c == 4:
         c = ending(screen)

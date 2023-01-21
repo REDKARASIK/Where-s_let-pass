@@ -5,8 +5,8 @@ pygame.init()
 
 class Camera:
     def __init__(self, screen, start_pos, map_width, map_height, speed):
-        self.map_w = map_width - screen.get_width() + 1100
-        self.map_h = map_height - screen.get_height() + 1100
+        self.map_w = map_width - screen.get_width() + 100000
+        self.map_h = map_height - screen.get_height() + 1000000
         self.w = 0
         self.h = 0
         self.dx = 0
@@ -34,8 +34,8 @@ class Camera:
             return self.dx, self.dy
 
     def update(self, target):
-        self.dx = -(target.rect.x - self.start_pos[0])
-        self.dy = -(target.rect.y - self.start_pos[1])
+        self.dx = -(target.rect.x - self.start_pos[0]) * 2
+        self.dy = -(target.rect.y - self.start_pos[1]) * 2
         self.start_pos = (target.rect.x, target.rect.y)
         self.speed = target.speed
         if self.stop:

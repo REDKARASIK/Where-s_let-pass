@@ -52,6 +52,7 @@ class Enemy(pygame.sprite.Sprite):
         self.attack_sound = pygame.mixer.Sound('data/zombie_attack.mp3')
         self.attack_sound.set_volume(0.25)
         self.attack_sound_check = False
+        self.score_give = False
 
     def cut_sheet(self, frames, sheet, columns, rows):
         k = 0.9
@@ -89,6 +90,9 @@ class Enemy(pygame.sprite.Sprite):
                     self.cur_frame = 0
                 self.idle_enemy()
             if self.health <= 0:
+                if not self.score_give:
+                    self.player.score += 15
+                    self.score_give = True
                 if self.dead:
                     self.cur_frame = 0
                 self.dead_enemy()
