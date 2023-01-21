@@ -40,7 +40,7 @@ def main_game(screen, name_level):
     if name_level == 1:
         start_pos = (64, 64)
         player = Player(*start_pos, map_level, enemy_group, player_group, delete_group)
-        player.speed_1 = 35 / fps
+        player.speed_1 = 150 / fps
         player.speed_2 = player.speed_1 * 2
         Health((1300, 800), player, screen, player_stats, delete_group)
         Stamina((1300, 820), player, screen, player_stats, delete_group)
@@ -55,6 +55,15 @@ def main_game(screen, name_level):
         Enemy(1300, 500, map_level, player, enemy_group, all_sprites, delete_group)
         DowerChest('medicine chest', (2000, 1350), screen, player, all_sprites, delete_group)
         Enemy(1600, 1450, map_level, player, enemy_group, all_sprites, delete_group)
+        DowerChest('stamina chest', (1000, 470), screen, player, all_sprites, delete_group)
+        Enemy(1050, 1100, map_level, player, enemy_group, all_sprites, delete_group)
+        DowerChest('fireball', (995, 1065), screen, player, all_sprites, delete_group)
+        Enemy(800, 1300, map_level, player, enemy_group, all_sprites, delete_group)
+        DowerChest('medicine chest', (650, 1250), screen, player, all_sprites, delete_group)
+        Enemy(300, 1500, map_level, player, enemy_group, all_sprites, delete_group)
+        DowerChest('fireball', (250, 1450), screen, player, all_sprites, delete_group)
+        Enemy(300, 1800, map_level, player, enemy_group, all_sprites, delete_group)
+        DowerChest('stamina chest', (250, 1860), screen, player, all_sprites, delete_group)
         inventory = Inventory(screen, player, screen.get_width() // 2, 0, inventory_group, delete_group)
         finish = Finish((3700, 125), player, all_sprites, delete_group)
     fon_dead = pygame.transform.scale(load_image('Game_over.png'), (600, 600))
