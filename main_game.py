@@ -23,7 +23,7 @@ player_stats = pygame.sprite.Group()
 inventory_group = pygame.sprite.Group()
 delete_group = pygame.sprite.Group()
 fps = 10
-MAP_LEVELS = {1: 'first_level.tmx', 2: 'second_level.tmx', 3: '', 4: '', 5: ''}
+MAP_LEVELS = {1: 'first_level.tmx', 2: 'second_level.tmx', 3: 'third_level.tmx', 4: '', 5: ''}
 
 
 def main_game(screen, name_level):
